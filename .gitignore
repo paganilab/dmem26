@@ -1,0 +1,11 @@
+# ignore additional files
+*.Rproj
+*.Rhistory
+.RData
+.DS_Store
+.Rproj.user/
+*.zip
+*.gz
+/.quarto/
+/RNA-seq_analysis/course_material
+/RNA-seq_analysis/results/

@@ -1,0 +1,42 @@
+project:
+  type: website
+  output-dir: docs # For pages publishing
+
+# Top navbar
+website:
+  favicon: ./pics/RNA-seq_icon.png
+  title: "2026 D-MEM PhD UNIMI"
+  navbar:
+    logo: ./pics/RNA-seq_icon.png
+    left:
+      - href: ./pages/index.Rmd
+        text: Home
+      - href: ./pages/Intro_to_R.Rmd
+        text: Intro_to_R
+#      - href: ./RNA-seq_analysis/pages/RNA-seq_principles.Rmd
+#        text: RNA-seq principles
+      - href: ./pages/Part1.Rmd
+        text: Part 1
+      - href: ./pages/Part2.Rmd
+        text: Part 2
+#      - href: ./pages/help.Rmd
+#        text: Help  
+    right: 
+      - icon: github
+        href: https://github.com/paganilab
+      - icon: twitter
+        href: https://twitter.com/LabPagani
+
+
+# Themes, can be changed with .css files and .scss 
+format:
+  html:
+    theme: 
+      - yeti
+      - sass_styling.scss
+    toc: true
+    toc_float: true
+    toc_collapsed: true
+
+# Code theme
+highlight-style: github
