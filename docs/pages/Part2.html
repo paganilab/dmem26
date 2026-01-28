@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-01-27">
+
+<title>RNA-seq_analysis_part2 – 2026 D-MEM PhD UNIMI</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href=".././pics/RNA-seq_icon_v2.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de84f8d6bb715db06a919283c2d1e787.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-d62041491b689b9bde5dbe557e099e3a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="../site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src=".././pics/RNA-seq_icon_v2.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">2026 D-MEM PhD UNIMI</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../pages/index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../pages/Intro_to_R.html"> 
+<span class="menu-text">Intro_to_R</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../pages/Part1.html"> 
+<span class="menu-text">Part 1</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="../pages/Part2.html" aria-current="page"> 
+<span class="menu-text">Part 2</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/paganilab"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/LabPagani"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#objectives" id="toc-objectives" class="nav-link active" data-scroll-target="#objectives">Objectives</a></li>
+  <li><a href="#import-libraries" id="toc-import-libraries" class="nav-link" data-scroll-target="#import-libraries">Import libraries</a></li>
+  <li><a href="#enrichment-analysis-using-gsea" id="toc-enrichment-analysis-using-gsea" class="nav-link" data-scroll-target="#enrichment-analysis-using-gsea">Enrichment analysis using GSEA</a></li>
+  <li><a href="#gene-ontology-or-pathway-enrichment-analyses-over-representation" id="toc-gene-ontology-or-pathway-enrichment-analyses-over-representation" class="nav-link" data-scroll-target="#gene-ontology-or-pathway-enrichment-analyses-over-representation">Gene Ontology or Pathway Enrichment Analyses (over representation)</a></li>
+  <li><a href="#take-home-messages" id="toc-take-home-messages" class="nav-link" data-scroll-target="#take-home-messages">Take-home Messages 🏠</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">RNA-seq_analysis_part2</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 27, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="objectives" class="level2">
+<h2 class="anchored" data-anchor-id="objectives">Objectives</h2>
+<ul>
+<li>Downstream analysis of differential expression data</li>
+<li>Gene ontology analysis on interesting gene groups</li>
+<li>Gene set enrichment analysis (GSEA)</li>
+</ul>
+<blockquote class="blockquote">
+<p>Interpreting a long list of genes can be challenging because assessing each gene individually can not easily capture the key biological mechanisms underlying distinct phenotypes.</p>
+</blockquote>
+<center>
+<img src="../pics/BiologicalContext.png" width="800">
+</center>
+<p>Various computational approaches have been developed to assess the broader biological context of findings from omics experiments. Once we have our differentially expressed genes, we can perform downstream analyses to check the <strong>functional aspects</strong> of the group of genes which are up- or down-regulated in our condition of interest. In the following sections, we will go through two of these, Gene Set Enrichment Analysis (GSEA) and Gene Ontology Enrichment Analysis (GO).</p>
+<p>We can then start addresing some interesting questions: - <em>What is the function of the differentially expressed genes?</em> - <em>What can they tell us regarding the molecular/phenotypic differences between our groups of interest?</em> - <em>Do they belong to specific ontologies or pathways?</em></p>
+</section>
+<section id="import-libraries" class="level2">
+<h2 class="anchored" data-anchor-id="import-libraries">Import libraries</h2>
+<p>Let’s upload the results file with information on the differential genes we generated.</p>
+<p>Import these files as R objects</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">'../results/res.deg.csv'</span>, <span class="at">sep=</span><span class="st">'</span><span class="sc">\t</span><span class="st">'</span>, <span class="at">header=</span>T, <span class="at">row.names=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="enrichment-analysis-using-gsea" class="level2">
+<h2 class="anchored" data-anchor-id="enrichment-analysis-using-gsea">Enrichment analysis using GSEA</h2>
+<p>Gene Set Enrichment Analysis - <a href="https://www.gsea-msigdb.org/gsea/index.jsp">GSEA</a> is a computational methods that determines whether any <em>a priori</em> defined geneset shows statistically significant differences between two biological states (e.g.&nbsp;phenotypes).</p>
+<p>In other words…</p>
+<p>…if it is enriched at the top of a list of genes ordered on the basis of expression differences between two groups</p>
+<center>
+<p><img src="../pics/GSEA_main.png" width="800">(<em>The web interface for GSEA</em>)</p>
+</center>
+<p>The following image adapted from the <a href="https://www.pnas.org/doi/10.1073/pnas.0506580102">original publication</a> illustrates the main steps in GSEA.</p>
+<center>
+<img src="../pics/GSEA_workflow.png" width="800">
+</center>
+<p>To answer if members of a gene set occur towards the top or bottom of the ranked list of genes, we need:</p>
+<ol type="1">
+<li>gene sets defined based on prior biological knowledge</li>
+<li>ranked list of differentially expressed genes (e.g.&nbsp;based on logFold Change or P-value)</li>
+</ol>
+<p>We will perform <strong>Pre-ranked GSEA</strong> using all genes tested for differential analysis, ranked by their -log10(p-adjusted value) * the sign of the log2FoldChange, e.g.&nbsp;significantly upregulated genes are at the top of the rank whilst significantly downregulated ones are at the bottom. In our case, we want to check if a gene set of colorectal cancer in significantly enriched in the genes that are upregulated in our primary CRC samples. To run GSEA, we will use the <code>fgsea</code> package.</p>
+<p>We will first retrieve gene sets from the Molecular Signatures Database (MSigDB), a resource of tens of thousands of annotated gene sets for use with GSEA software, divided into Human and Mouse collections. In order to extract the gene set without the need to directly download it, we are going to access MSigDB directly from R using another package called msigdbr.</p>
+<center>
+<p><img src="../pics/MSigDB.png" width="800">(<em>The web interface for MSigDB</em>)</p>
+</center>
+<p>There are 35,134 gene sets (number constantly increases) in the Human MSigDB that are divided into 9 major collections.</p>
+<center>
+<p><img src="../pics/MSigDB_Collections.png" width="800">(<em>Human MSigDB Collections</em>)</p>
+</center>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Rank the genes based on their padj x sign(log2FC)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>ranked <span class="ot">&lt;-</span> res <span class="sc">%&gt;%</span> </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames_to_column</span>(<span class="at">var=</span><span class="st">"GeneID"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>GeneID<span class="sc">==</span><span class="st">""</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">padjxFC=</span><span class="sc">-</span><span class="fu">log10</span>(FDR)<span class="sc">*</span><span class="fu">sign</span>(logFC)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(padjxFC)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(padjxFC, GeneID)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ranked)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="bordered"><code>   PALD1     CDH3    ASIC1 C17orf96    AJUBA     KLF7 
+54.98910 43.63364 40.95911 33.19569 32.54922 32.20434 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(ranked)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="bordered"><code>     UGDH     SGSM3     CCNJL    SUCLG1      NANS     BEST4 
+-14.27637 -14.42987 -14.99255 -17.34078 -17.78642 -18.20838 </code></pre>
+</div>
+</div>
+<p>Install and import libraries for fgsea and msigdbr</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(fgsea, <span class="at">quiet=</span><span class="cn">TRUE</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">"fgsea"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(msigdbr, <span class="at">quiet=</span><span class="cn">TRUE</span>))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">"msigdbr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Extract the curated gene sets (C2) from the MSigDB database</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(msigdbr)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract specific gene sets from the MSigDB database, e.g. Chemical and Genetic Pertubations</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>curated_gsets <span class="ot">&lt;-</span> <span class="fu">msigdbr</span>(<span class="at">species =</span> <span class="st">"human"</span>, <span class="at">collection =</span> <span class="st">"C2"</span>, <span class="at">subcollection =</span> <span class="st">'CGP'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Inspect the information and gene sets we retrieved.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(curated_gsets)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="bordered"><code> [1] "gene_symbol"        "ncbi_gene"          "ensembl_gene"      
+ [4] "db_gene_symbol"     "db_ncbi_gene"       "db_ensembl_gene"   
+ [7] "source_gene"        "gs_id"              "gs_name"           
+[10] "gs_collection"      "gs_subcollection"   "gs_collection_name"
+[13] "gs_description"     "gs_source_species"  "gs_pmid"           
+[16] "gs_geoid"           "gs_exact_source"    "gs_url"            
+[19] "db_version"         "db_target_species" </code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>curated_gsets <span class="sc">%&gt;%</span> <span class="fu">pull</span>(gs_name) <span class="sc">%&gt;%</span> <span class="fu">unique</span>() <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="bordered"><code>[1] "ABBUD_LIF_SIGNALING_1_DN" "ABBUD_LIF_SIGNALING_1_UP"</code></pre>
+</div>
+</div>
+<p>Check if there are any gene sets related to Colon Cancer.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>curated_gsets <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">'COLON_AND_RECTAL'</span>,gs_name)) <span class="sc">%&gt;%</span> <span class="fu">head</span>() <span class="sc">%&gt;%</span> <span class="fu">kbl</span>() <span class="sc">%&gt;%</span> <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">gene_symbol</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">ncbi_gene</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">ensembl_gene</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">db_gene_symbol</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">db_ncbi_gene</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">db_ensembl_gene</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">source_gene</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">gs_id</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">gs_name</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">gs_collection</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">gs_subcollection</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">gs_collection_name</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">gs_description</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">gs_source_species</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">gs_pmid</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">gs_geoid</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">gs_exact_source</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">gs_url</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">db_version</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">db_target_species</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">ACTL8</td>
+<td style="text-align: left;">81569</td>
+<td style="text-align: left;">ENSG00000117148</td>
+<td style="text-align: left;">ACTL8</td>
+<td style="text-align: left;">81569</td>
+<td style="text-align: left;">ENSG00000117148</td>
+<td style="text-align: left;">LOC81569</td>
+<td style="text-align: left;">M15780</td>
+<td style="text-align: left;">GRADE_COLON_AND_RECTAL_CANCER_DN</td>
+<td style="text-align: left;">C2</td>
+<td style="text-align: left;">CGP</td>
+<td style="text-align: left;">Chemical and Genetic Perturbations</td>
+<td style="text-align: left;">Down-regulated genes in both rectal and colon carcinoma compared to normal mucosa samples.</td>
+<td style="text-align: left;">HS</td>
+<td style="text-align: left;">17210682</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Table 5S: Colon &lt; 1 &amp; Rectum &lt; 1</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">2024.1.Hs</td>
+<td style="text-align: left;">HS</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ADAMTSL4</td>
+<td style="text-align: left;">54507</td>
+<td style="text-align: left;">ENSG00000143382</td>
+<td style="text-align: left;">ADAMTSL4</td>
+<td style="text-align: left;">54507</td>
+<td style="text-align: left;">ENSG00000143382</td>
+<td style="text-align: left;">TSRC1</td>
+<td style="text-align: left;">M15780</td>
+<td style="text-align: left;">GRADE_COLON_AND_RECTAL_CANCER_DN</td>
+<td style="text-align: left;">C2</td>
+<td style="text-align: left;">CGP</td>
+<td style="text-align: left;">Chemical and Genetic Perturbations</td>
+<td style="text-align: left;">Down-regulated genes in both rectal and colon carcinoma compared to normal mucosa samples.</td>
+<td style="text-align: left;">HS</td>
+<td style="text-align: left;">17210682</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Table 5S: Colon &lt; 1 &amp; Rectum &lt; 1</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">2024.1.Hs</td>
+<td style="text-align: left;">HS</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">AKR7A2</td>
+<td style="text-align: left;">8574</td>
+<td style="text-align: left;">ENSG00000053371</td>
+<td style="text-align: left;">AKR7A2</td>
+<td style="text-align: left;">8574</td>
+<td style="text-align: left;">ENSG00000053371</td>
+<td style="text-align: left;">AKR7A2</td>
+<td style="text-align: left;">M15780</td>
+<td style="text-align: left;">GRADE_COLON_AND_RECTAL_CANCER_DN</td>
+<td style="text-align: left;">C2</td>
+<td style="text-align: left;">CGP</td>
+<td style="text-align: left;">Chemical and Genetic Perturbations</td>
+<td style="text-align: left;">Down-regulated genes in both rectal and colon carcinoma compared to normal mucosa samples.</td>
+<td style="text-align: left;">HS</td>
+<td style="text-align: left;">17210682</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Table 5S: Colon &lt; 1 &amp; Rectum &lt; 1</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">2024.1.Hs</td>
+<td style="text-align: left;">HS</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">AOC2</td>
+<td style="text-align: left;">314</td>
+<td style="text-align: left;">ENSG00000131480</td>
+<td style="text-align: left;">AOC2</td>
+<td style="text-align: left;">314</td>
+<td style="text-align: left;">ENSG00000131480</td>
+<td style="text-align: left;">AOC2</td>
+<td style="text-align: left;">M15780</td>
+<td style="text-align: left;">GRADE_COLON_AND_RECTAL_CANCER_DN</td>
+<td style="text-align: left;">C2</td>
+<td style="text-align: left;">CGP</td>
+<td style="text-align: left;">Chemical and Genetic Perturbations</td>
+<td style="text-align: left;">Down-regulated genes in both rectal and colon carcinoma compared to normal mucosa samples.</td>
+<td style="text-align: left;">HS</td>
+<td style="text-align: left;">17210682</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Table 5S: Colon &lt; 1 &amp; Rectum &lt; 1</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">2024.1.Hs</td>
+<td style="text-align: left;">HS</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">B3GALNT1</td>
+<td style="text-align: left;">8706</td>
+<td style="text-align: left;">ENSG00000169255</td>
+<td style="text-align: left;">B3GALNT1</td>
+<td style="text-align: left;">8706</td>
+<td style="text-align: left;">ENSG00000169255</td>
+<td style="text-align: left;">B3GALT3</td>
+<td style="text-align: left;">M15780</td>
+<td style="text-align: left;">GRADE_COLON_AND_RECTAL_CANCER_DN</td>
+<td style="text-align: left;">C2</td>
+<td style="text-align: left;">CGP</td>
+<td style="text-align: left;">Chemical and Genetic Perturbations</td>
+<td style="text-align: left;">Down-regulated genes in both rectal and colon carcinoma compared to normal mucosa samples.</td>
+<td style="text-align: left;">HS</td>
+<td style="text-align: left;">17210682</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Table 5S: Colon &lt; 1 &amp; Rectum &lt; 1</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">2024.1.Hs</td>
+<td style="text-align: left;">HS</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">C14orf132</td>
+<td style="text-align: left;">56967</td>
+<td style="text-align: left;">ENSG00000227051</td>
+<td style="text-align: left;">C14orf132</td>
+<td style="text-align: left;">56967</td>
+<td style="text-align: left;">ENSG00000227051</td>
+<td style="text-align: left;">C14orf132</td>
+<td style="text-align: left;">M15780</td>
+<td style="text-align: left;">GRADE_COLON_AND_RECTAL_CANCER_DN</td>
+<td style="text-align: left;">C2</td>
+<td style="text-align: left;">CGP</td>
+<td style="text-align: left;">Chemical and Genetic Perturbations</td>
+<td style="text-align: left;">Down-regulated genes in both rectal and colon carcinoma compared to normal mucosa samples.</td>
+<td style="text-align: left;">HS</td>
+<td style="text-align: left;">17210682</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Table 5S: Colon &lt; 1 &amp; Rectum &lt; 1</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">2024.1.Hs</td>
+<td style="text-align: left;">HS</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p>We will filter the curated gene sets for the gene sets of our interest and then prepare a list retrieving the genes that are contained in each geneset (shown in the <code>gs_name</code> column).</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter the curated gene sets for the gene set of our interest</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>gene_set_name <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"GRADE_COLON_AND_RECTAL_CANCER_UP"</span>, <span class="st">"GRADE_COLON_AND_RECTAL_CANCER_DN"</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an empty gene set list</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>gset <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># For each gene set retrieve the gene symbols and store them in the gset list.</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (gs <span class="cf">in</span> gene_set_name) {</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># subset the table for a gene set</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  tmp <span class="ot">&lt;-</span> curated_gsets <span class="sc">%&gt;%</span> <span class="fu">filter</span>(gs_name<span class="sc">==</span>gs)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># retrieve gene symbols</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  tmp_gset <span class="ot">&lt;-</span> <span class="fu">list</span>(tmp<span class="sc">$</span>gene_symbol)    </span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="co">#names(tmp_gset) &lt;- gene_set_name</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add the genes in the gset list</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  gset[gs] <span class="ot">&lt;-</span> tmp_gset</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve the number of genes in each element of the list</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(gset, length)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="bordered"><code>$GRADE_COLON_AND_RECTAL_CANCER_UP
+[1] 291
+
+$GRADE_COLON_AND_RECTAL_CANCER_DN
+[1] 102</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>gset</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="bordered"><code>$GRADE_COLON_AND_RECTAL_CANCER_UP
+  [1] "AAMP"      "AARS1"     "ABCB8"     "ABCF1"     "ACBD6"     "ADGRG1"   
+  [7] "AHCY"      "ALG1"      "AMPD3"     "ANXA5"     "ATIC"      "ATP6AP2"  
+ [13] "AURKA"     "AZGP1"     "BACE2"     "BORA"      "BPHL"      "C4BPB"    
+ [19] "CAMSAP1"   "CARHSP1"   "CCDC191"   "CCDC85B"   "CCDC92"    "CCNB1"    
+ [25] "CCT5"      "CCT7"      "CCT8"      "CD44"      "CD46"      "CDC25B"   
+ [31] "CDC45"     "CDC6"      "CDCA7"     "CDK1"      "CDK7"      "CEP57L1"  
+ [37] "CFB"       "CHCHD2"    "CKS2"      "CNBP"      "COL4A1"    "COPS8"    
+ [43] "CSNK1E"    "CSTF1"     "CTSB"      "DAP3"      "DCAF7"     "DDIT4"    
+ [49] "DDX1"      "DDX27"     "DDX39A"    "DDX39B"    "DEF8"      "DGAT2"    
+ [55] "DHX8"      "DHX9"      "DNAJA3"    "DNAJC2"    "DNTTIP1"   "DOLK"     
+ [61] "DPM1"      "DPY19L1"   "DRG1"      "DUSP18"    "EEF1E1"    "EFTUD2"   
+ [67] "EIF2S2"    "EIF3B"     "EIF3E"     "EIF4A1"    "EIF4B"     "EIF6"     
+ [73] "EMC8"      "ENG"       "EPHB2"     "EPRS1"     "ERI1"      "ETS2"     
+ [79] "ETV4"      "EXOC2"     "FAM210B"   "FBL"       "FBXO11"    "FDFT1"    
+ [85] "FERMT1"    "FXYD5"     "GARS1"     "GCLC"      "GCSH"      "GDF15"    
+ [91] "GEMIN6"    "GLO1"      "GPSM2"     "GSK3B"     "GTF2F2"    "GTF3A"    
+ [97] "GTPBP10"   "GYG2"      "H2AZ1"     "HELLS"     "HILPDA"    "HJURP"    
+[103] "HM13"      "HMGB1"     "HMGB2"     "HNRNPA1"   "HNRNPA2B1" "HNRNPD"   
+[109] "HNRNPK"    "HOXB5"     "HSPA4"     "HSPA9"     "HSPE1"     "ICA1"     
+[115] "IFITM1"    "IFRD1"     "INTS7"     "IRAK1"     "ITGB5"     "KARS1"    
+[121] "KBTBD2"    "KIF23"     "KNTC1"     "KPNA3"     "L1CAM"     "LAMP1"    
+[127] "LAPTM4B"   "LDHA"      "LDHB"      "LRP8"      "LST1"      "LY6E"     
+[133] "LYAR"      "MACROH2A1" "MAGED2"    "MARS1"     "MBTPS2"    "MCM2"     
+[139] "MCM3"      "MCM4"      "MCM5"      "MCM7"      "MDC1"      "MELK"     
+[145] "METTL2B"   "METTL3"    "METTL5"    "MKLN1"     "MLST8"     "MRGBP"    
+[151] "MRPL17"    "MRPL3"     "MRPL9"     "MTHFD1"    "MTHFD2"    "MYC"      
+[157] "NAA10"     "NDUFAF7"   "NEBL"      "NIP7"      "NIT2"      "NMI"      
+[163] "NOB1"      "NOL8"      "NONO"      "NOP56"     "NPM1"      "NQO2"     
+[169] "NSMCE2"    "NUSAP1"    "OLA1"      "OSER1"     "PA2G4"     "PABPC3"   
+[175] "PAFAH1B3"  "PCNA"      "PDCD2L"    "PDCD6"     "PDK3"      "PDXK"     
+[181] "PERP"      "PFDN2"     "PKM"       "PLAAT3"    "PLAU"      "PLCB4"    
+[187] "PLK1"      "PMPCB"     "PNPO"      "PNPT1"     "POFUT1"    "POLD2"    
+[193] "POLQ"      "POLR1D"    "POLR2D"    "POMP"      "PPA1"      "PPIA"     
+[199] "PRDX1"     "PRDX4"     "PRKDC"     "PSMA1"     "PSMA2"     "PSMA3"    
+[205] "PSMB1"     "PSMB3"     "PSMB7"     "PSMD14"    "PSMD4"     "PSMG1"    
+[211] "PTCD3"     "PTDSS1"    "PTPN12"    "PXDN"      "RAB4B"     "RAN"      
+[217] "RBM26"     "RCC1"      "RCN1"      "RFC2"      "RFC5"      "RHEB"     
+[223] "RLIM"      "RMI2"      "RRM1"      "RRM2"      "RTF2"      "RTKN"     
+[229] "S100A14"   "SAP18"     "SEPHS1"    "SERPINB5"  "SET"       "SFT2D3"   
+[235] "SH3GL1"    "SHISA5"    "SKA3"      "SLC12A2"   "SMPD4"     "SNRPB"    
+[241] "SOD2"      "SOX9"      "SPARC"     "SPATA13"   "SPATA13"   "SPP1"     
+[247] "SRP72"     "SRSF1"     "SRSF2"     "SSB"       "SSRP1"     "SYAP1"    
+[253] "SYNCRIP"   "TALDO1"    "TARS1"     "TBCE"      "TCF7"      "TFB1M"    
+[259] "TGDS"      "TGFBI"     "THEM6"     "THOC3"     "THY1"      "TIMELESS" 
+[265] "TIMP1"     "TKT"       "TMEM97"    "TMSB4Y"    "TPI1"      "TRAF5"    
+[271] "TRAP1"     "TRUB2"     "TTPAL"     "UBD"       "UBE2N"     "UBR4"     
+[277] "URI1"      "USP7"      "USP9X"     "UTP11"     "VBP1"      "VEGFA"    
+[283] "VKORC1L1"  "WDR74"     "WDR75"     "XRN2"      "ZDHHC9"    "ZFAND1"   
+[289] "ZMYND8"    "ZNF84"     "ZNG1B"    
+
+$GRADE_COLON_AND_RECTAL_CANCER_DN
+  [1] "ACTL8"      "ADAMTSL4"   "AKR7A2"     "AOC2"       "B3GALNT1"  
+  [6] "C14orf132"  "C2orf88"    "CA5A"       "CACNA2D2"   "CBS"       
+ [11] "CCDC71"     "CCR9"       "CD28"       "CDK12"      "CFD"       
+ [16] "CHST15"     "CHST8"      "COL4A5"     "CPN2"       "CX3CR1"    
+ [21] "CYB5D1"     "DAP"        "DHPS"       "FABP7"      "FAN1"      
+ [26] "FHL1"       "FKRP"       "GFI1"       "GGA1"       "GNA11"     
+ [31] "GNPDA1"     "GPC1"       "GPR87"      "GREB1"      "GTF3C4"    
+ [36] "HAUS5"      "HIC2"       "HMGXB4"     "ITPKB"      "JAM3"      
+ [41] "KRT84"      "LDB2"       "LGALS2"     "LRFN1"      "LRTOMT"    
+ [46] "LYPD3"      "MEF2D"      "MITF"       "MSRA"       "MYCN"      
+ [51] "NAT8L"      "NAV1"       "NR1H4"      "NR3C1"      "NUDT11"    
+ [56] "OSGIN2"     "PARM1"      "PARVB"      "PCDHB5"     "PDK4"      
+ [61] "PGC"        "PLAC8"      "PLD1"       "PLPP1"      "PRKACB"    
+ [66] "PRRT2"      "PTPRZ1"     "RERE"       "SASH1"      "SCAMP5"    
+ [71] "SERTAD4"    "SESN2"      "SIRPB1"     "SIX1"       "SLC16A9"   
+ [76] "SLC30A3"    "SLC30A6"    "SMIM14"     "SNCA"       "SOCS2"     
+ [81] "SPIN4"      "ST6GALNAC6" "STAR"       "STAT5A"     "SYNC"      
+ [86] "TBC1D27P"   "TGFBR3"     "TIMM22"     "TLE4"       "TLN2"      
+ [91] "TM9SF1"     "TOX2"       "TRPS1"      "TYRP1"      "UBAP1"     
+ [96] "UGDH"       "UNC5B"      "XPNPEP3"    "YY1AP1"     "ZBTB4"     
+[101] "ZNF135"     "ZNF787"    </code></pre>
+</div>
+</div>
+<p>Run GSEA on our ranked list of genes using the gene sets we retrieve from MSigDB. Here, we set the number of permutations to 1000.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fgsea)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Run GSEA</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>fgseaRes <span class="ot">&lt;-</span> <span class="fu">fgsea</span>(<span class="at">pathways =</span> gset, </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">stats    =</span> ranked,</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">nperm =</span> <span class="dv">1000</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>                  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Inspect the results for each geneset, which include the normalized enrichment score (NES) and nominal P-value using 1000 permutations.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Take a look at results</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>fgseaRes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="bordered"><code>                            pathway       pval       padj         ES       NES
+                             &lt;char&gt;      &lt;num&gt;      &lt;num&gt;      &lt;num&gt;     &lt;num&gt;
+1: GRADE_COLON_AND_RECTAL_CANCER_UP 0.00120048 0.00240096  0.6717684  2.141272
+2: GRADE_COLON_AND_RECTAL_CANCER_DN 0.03536977 0.03536977 -0.4311914 -1.384921
+   nMoreExtreme  size                             leadingEdge
+          &lt;num&gt; &lt;int&gt;                                  &lt;list&gt;
+1:            0   274    TGFBI,ETV4,FXYD5,DGAT2,SPP1,NEBL,...
+2:           10    79 UGDH,GGA1,GNA11,AKR7A2,C2orf88,TLN2,...</code></pre>
+</div>
+</div>
+<p>Plot GSEA results</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot GSEA results</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (gs <span class="cf">in</span> <span class="fu">unique</span>(gene_set_name)){</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">plotEnrichment</span>(gset[[gs]],</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>               ranked) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title=</span>gs))</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Part2_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Part2_files/figure-html/unnamed-chunk-15-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The GSEA results show that the <strong>GRADE_COLON_AND_RECTAL_CANCER</strong> genesets are enriched in the differentially upregulated and downregulated genes in our dataset. The geneset derives from a <a href="https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GRADE_COLON_AND_RECTAL_CANCER_UP.html?ex=1">study</a>, in which they used oligonucleotide microarrays to profile human rectal and colon carcinoma tumors compared to normal mucosa samples.</p>
+<blockquote class="blockquote">
+<p>Can you retrieve the leading edge genes from the reuslts?</p>
+</blockquote>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>fgseaRes<span class="sc">$</span>leadingEdge</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="bordered"><code>[[1]]
+  [1] "TGFBI"    "ETV4"     "FXYD5"    "DGAT2"    "SPP1"     "NEBL"    
+  [7] "LRP8"     "MBTPS2"   "TCF7"     "GPSM2"    "CDC25B"   "AZGP1"   
+ [13] "ZMYND8"   "SOX9"     "CD46"     "NPM1"     "TIMP1"    "MYC"     
+ [19] "PLAU"     "MRGBP"    "PTPN12"   "CD44"     "AHCY"     "PERP"    
+ [25] "DPY19L1"  "OLA1"     "PPA1"     "EIF2S2"   "LY6E"     "TRAF5"   
+ [31] "DPM1"     "GLO1"     "RHEB"     "FERMT1"   "NOB1"     "VEGFA"   
+ [37] "WDR75"    "DDX27"    "CSTF1"    "LYAR"     "IFITM1"   "POLR1D"  
+ [43] "UBD"      "GTF3A"    "ZFAND1"   "HILPDA"   "EIF3E"    "CAMSAP1" 
+ [49] "TMEM97"   "L1CAM"    "NONO"     "GTPBP10"  "RLIM"     "ETS2"    
+ [55] "DNAJC2"   "SET"      "ZDHHC9"   "XRN2"     "TGDS"     "NOL8"    
+ [61] "SLC12A2"  "PDK3"     "CFB"      "TTPAL"    "MKLN1"    "URI1"    
+ [67] "ZNF84"    "DEF8"     "SPARC"    "HM13"     "LDHA"     "CCDC85B" 
+ [73] "VBP1"     "OSER1"    "CDCA7"    "POFUT1"   "SERPINB5" "NIT2"    
+ [79] "NQO2"     "AURKA"    "PRDX4"    "SSB"      "CKS2"     "KBTBD2"  
+ [85] "HNRNPA1"  "NIP7"     "GTF2F2"   "DDIT4"    "SHISA5"   "ENG"     
+ [91] "RCN1"     "PRKDC"    "CSNK1E"   "USP9X"    "LDHB"     "INTS7"   
+ [97] "MTHFD2"   "METTL5"   "RBM26"    "CDK7"     "CDC6"     "ADGRG1"  
+[103] "COPS8"    "IRAK1"    "PAFAH1B3" "VKORC1L1" "NOP56"    "GCSH"    
+[109] "EIF3B"    "AMPD3"    "RAN"      "PSMD14"   "GCLC"     "PNPT1"   
+[115] "EXOC2"    "PSMA1"   
+
+[[2]]
+ [1] "UGDH"       "GGA1"       "GNA11"      "AKR7A2"     "C2orf88"   
+ [6] "TLN2"       "ST6GALNAC6" "TIMM22"     "SYNC"       "ZNF787"    
+[11] "LGALS2"     "ZNF135"     "SMIM14"     "MSRA"       "PLD1"      
+[16] "SESN2"      "UNC5B"      "SERTAD4"    "DAP"        "PARM1"     
+[21] "NR3C1"      "GFI1"       "TLE4"       "CYB5D1"     "LRTOMT"    
+[26] "SOCS2"      "TM9SF1"     "SLC16A9"    "CCDC71"     "RERE"      </code></pre>
+</div>
+</div>
+</section>
+<section id="gene-ontology-or-pathway-enrichment-analyses-over-representation" class="level2">
+<h2 class="anchored" data-anchor-id="gene-ontology-or-pathway-enrichment-analyses-over-representation">Gene Ontology or Pathway Enrichment Analyses (over representation)</h2>
+<p>To obtain further <strong>biological insights related to gene regulation</strong> we can perform Gene Ontology or Pathway Enrichment analyses. We will try to get a more <em>unsupervised</em> look at what kind of biological processes are captured by the upregulated genes in primary CRC.</p>
+<p>We will do this using the <code>gProfiler</code> package in <code>R</code>.</p>
+<blockquote class="blockquote">
+<p><strong>Gene Ontology</strong> is a standardized system for <strong>annotating genes with terms</strong> describing their biological attributes. These terms are organized into three main categories: <strong>Molecular Function</strong> (the biochemical activity of the gene product), <strong>Biological Process</strong> (the broader biological objectives the gene contributes to), and <strong>Cellular Component</strong> (the location where the gene product is active).</p>
+</blockquote>
+<p>The <em>enrichment</em> is evaluated in this way: a list of genes is compared against a background set of genes (e.g., all genes in the genome) to identify GO terms that are <strong>significantly overrepresented in the list of interest</strong>.</p>
+<blockquote class="blockquote">
+<p>Statistical tests, such as Fisher’s exact test or hypergeometric test, are commonly used to determine whether the observed number of genes associated with a particular GO term in the gene list is significantly higher than expected by chance.</p>
+</blockquote>
+<p>The output of GO enrichment analysis includes a list of significantly enriched GO terms along with statistical metrics, such as p-values or false discovery rates (FDR).</p>
+<blockquote class="blockquote">
+<p>This information helps to prioritize genes for further study and provides further context to the experimental results!</p>
+</blockquote>
+<p>First, we will <strong>create a custom function</strong> that takes as input a list of genes and automatically run the <code>gProfiler</code> function responsible for calulating the enrichment and also creating two plots: one that generally describes the categories of enriched terms, and another one more specific for <strong>enriched pathways from KEGG</strong> (aka, <em>Kyoto Encyclopedia of Genes and Genomes</em>).</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Result data.frames will be stored in this object </span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>gprof <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co">#genes: provide a character vector with gene names</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co">#geneListName: a character identifying the list of genes that will be used to name the data.frame stored in res and to create the pdf</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>gprofiler <span class="ot">&lt;-</span> <span class="cf">function</span>(genes, geneListName) {</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Parameters you might want to change:</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">#ordered_query: if the gene list provided is ranked </span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  <span class="co">#evcodes: if you want to have the gene ids that intersect between the query and the term</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="co">#custom_bg: the gene universe used as a background</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  gostres <span class="ot">&lt;-</span> <span class="fu">gost</span>(<span class="at">query =</span><span class="fu">unique</span>(<span class="fu">as.character</span>(genes)), </span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>                  <span class="at">organism =</span> <span class="st">"hsapiens"</span>, <span class="at">ordered_query =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>                  <span class="at">multi_query =</span> <span class="cn">FALSE</span>, <span class="at">significant =</span> <span class="cn">TRUE</span>, <span class="at">exclude_iea =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>                  <span class="at">measure_underrepresentation =</span> <span class="cn">FALSE</span>, <span class="at">evcodes =</span> <span class="cn">TRUE</span> , </span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>                  <span class="at">user_threshold =</span> <span class="fl">0.05</span>, <span class="at">correction_method =</span> <span class="st">"g_SCS"</span>, </span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>                  <span class="at">domain_scope =</span> <span class="st">"annotated"</span>, <span class="at">custom_bg =</span> <span class="cn">NULL</span>, </span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>                  <span class="at">numeric_ns =</span> <span class="st">""</span>, <span class="at">sources =</span> <span class="cn">NULL</span>, <span class="at">as_short_link =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create the overview plot (not interactive)</span></span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>  gostplot <span class="ot">&lt;-</span> <span class="fu">gostplot</span>(gostres, <span class="at">capped =</span> <span class="cn">TRUE</span>, <span class="at">interactive =</span> F)</span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Keep only useful columns</span></span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>  gp_mod <span class="ot">&lt;-</span> gostres<span class="sc">$</span>result[,<span class="fu">c</span>(<span class="st">"query"</span>, <span class="st">"source"</span>, <span class="st">"term_id"</span>,</span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>                             <span class="st">"term_name"</span>, <span class="st">"p_value"</span>, <span class="st">"query_size"</span>, </span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>                             <span class="st">"intersection_size"</span>, <span class="st">"term_size"</span>, </span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>                             <span class="st">"effective_domain_size"</span>, <span class="st">"intersection"</span>)]</span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>  gp_mod<span class="sc">$</span>query <span class="ot">&lt;-</span> geneListName</span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Calculate GeneRatio for the dotplot: number of genes intersecting the term/ total number of unique genes provided</span></span>
+<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a>  gp_mod<span class="sc">$</span>GeneRatio <span class="ot">&lt;-</span> gp_mod<span class="sc">$</span>intersection_size<span class="sc">/</span>gp_mod<span class="sc">$</span>query_size</span>
+<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Number of genes within the term / number of all unique genes across all terms (universe)</span></span>
+<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a>  gp_mod<span class="sc">$</span>BgRatio <span class="ot">&lt;-</span> <span class="fu">paste0</span>(gp_mod<span class="sc">$</span>term_size, <span class="st">"/"</span>, gp_mod<span class="sc">$</span>effective_domain_size)</span>
+<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Rename columns</span></span>
+<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(gp_mod) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Cluster"</span>, <span class="st">"Category"</span>, <span class="st">"ID"</span>, <span class="st">"Description"</span>, <span class="st">"p.adjust"</span>, <span class="st">"query_size"</span>, <span class="st">"Intersection_size"</span>, <span class="st">"term_size"</span>, <span class="st">"effective_domain_size"</span>, <span class="st">"intersection"</span>, <span class="st">"GeneRatio"</span>, <span class="st">"BgRatio"</span>)</span>
+<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-41"><a href="#cb25-41" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Save the results data.frame in res</span></span>
+<span id="cb25-42"><a href="#cb25-42" aria-hidden="true" tabindex="-1"></a>  gprof[[geneListName]] <span class="ot">&lt;&lt;-</span> gp_mod</span>
+<span id="cb25-43"><a href="#cb25-43" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove possible duplicate terms for plotting</span></span>
+<span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a>  gp_mod <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(Description) <span class="sc">%&gt;%</span> </span>
+<span id="cb25-47"><a href="#cb25-47" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="fu">row_number</span>() <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb25-48"><a href="#cb25-48" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-49"><a href="#cb25-49" aria-hidden="true" tabindex="-1"></a>  <span class="co"># omit_ids &lt;- gp_mod[duplicated(gp_mod$Description), ]</span></span>
+<span id="cb25-50"><a href="#cb25-50" aria-hidden="true" tabindex="-1"></a>  <span class="co"># omit_ids_list &lt;- omit_ids$Description</span></span>
+<span id="cb25-51"><a href="#cb25-51" aria-hidden="true" tabindex="-1"></a>  <span class="co"># gp_mod &lt;- gp_mod[!gp_mod$Description %in% omit_ids_list,]</span></span>
+<span id="cb25-52"><a href="#cb25-52" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-53"><a href="#cb25-53" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-54"><a href="#cb25-54" aria-hidden="true" tabindex="-1"></a>  go_table_pathways <span class="ot">&lt;-</span> <span class="fu">filter</span>(gp_mod, Category <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'KEGG'</span>))</span>
+<span id="cb25-55"><a href="#cb25-55" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-56"><a href="#cb25-56" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Calculate negLog P-Value and rank terms based on this value  </span></span>
+<span id="cb25-57"><a href="#cb25-57" aria-hidden="true" tabindex="-1"></a>  go_table_pathways<span class="sc">$</span>negLogPval<span class="ot">=</span><span class="sc">-</span><span class="fu">log10</span>(go_table_pathways<span class="sc">$</span>p.adjust)</span>
+<span id="cb25-58"><a href="#cb25-58" aria-hidden="true" tabindex="-1"></a>  go_table_pathways <span class="ot">&lt;-</span> go_table_pathways[<span class="fu">order</span>(<span class="sc">-</span>go_table_pathways<span class="sc">$</span>negLogPval),]</span>
+<span id="cb25-59"><a href="#cb25-59" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-60"><a href="#cb25-60" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Make dot plot</span></span>
+<span id="cb25-61"><a href="#cb25-61" aria-hidden="true" tabindex="-1"></a>  dotPlot <span class="ot">&lt;-</span> <span class="fu">arrange</span>(go_table_pathways, negLogPval) <span class="sc">%&gt;%</span></span>
+<span id="cb25-62"><a href="#cb25-62" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(Description) <span class="sc">%&gt;%</span> </span>
+<span id="cb25-63"><a href="#cb25-63" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="fu">row_number</span>() <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb25-64"><a href="#cb25-64" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>()</span>
+<span id="cb25-65"><a href="#cb25-65" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-66"><a href="#cb25-66" aria-hidden="true" tabindex="-1"></a>  dotPlot <span class="ot">&lt;-</span> <span class="fu">arrange</span>(go_table_pathways, negLogPval) <span class="sc">%&gt;%</span></span>
+<span id="cb25-67"><a href="#cb25-67" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Description =</span> <span class="fu">factor</span>(.<span class="sc">$</span>Description, <span class="at">levels =</span> .<span class="sc">$</span>Description)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-68"><a href="#cb25-68" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(negLogPval, Description)) <span class="sc">+</span></span>
+<span id="cb25-69"><a href="#cb25-69" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> negLogPval, <span class="at">size =</span> GeneRatio))<span class="sc">+</span></span>
+<span id="cb25-70"><a href="#cb25-70" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_size</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">9</span>)) <span class="sc">+</span></span>
+<span id="cb25-71"><a href="#cb25-71" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_gradient</span>(<span class="at">low=</span><span class="st">"blue"</span>, <span class="at">high=</span><span class="st">"red"</span>)<span class="sc">+</span></span>
+<span id="cb25-72"><a href="#cb25-72" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()<span class="sc">+</span></span>
+<span id="cb25-73"><a href="#cb25-73" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">'Pathway'</span>)<span class="sc">+</span></span>
+<span id="cb25-74"><a href="#cb25-74" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.y=</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb25-75"><a href="#cb25-75" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.text.x=</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>),</span>
+<span id="cb25-76"><a href="#cb25-76" aria-hidden="true" tabindex="-1"></a>          <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>),</span>
+<span id="cb25-77"><a href="#cb25-77" aria-hidden="true" tabindex="-1"></a>          <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">'bold'</span>))</span>
+<span id="cb25-78"><a href="#cb25-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-79"><a href="#cb25-79" aria-hidden="true" tabindex="-1"></a><span class="co"># Print on display</span></span>
+<span id="cb25-80"><a href="#cb25-80" aria-hidden="true" tabindex="-1"></a><span class="fu">return</span>(<span class="fu">list</span>(gostplot, dotPlot))</span>
+<span id="cb25-81"><a href="#cb25-81" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, let’s extract a <em>vector</em> of genes up-regulated in tumor samples, and perform the analysis:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract upregulated genes</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>up_genes_all <span class="ot">&lt;-</span> res <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(FDR <span class="sc">&lt;</span> <span class="fl">0.01</span> <span class="sc">&amp;</span> logFC <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(FDR) <span class="sc">%&gt;%</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can check the number of genes that we have retrieved.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"Number of tumor upregulated genes:"</span>, <span class="fu">length</span>(up_genes_all))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="bordered"><code>[1] "Number of tumor upregulated genes: 1288"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">"Top differentially expressed genes:"</span>, <span class="fu">paste</span>(<span class="fu">head</span>(up_genes_all, <span class="dv">10</span>), <span class="at">collapse =</span> <span class="st">", "</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="bordered"><code>[1] "Top differentially expressed genes:PALD1, CDH3, ASIC1, C17orf96, AJUBA, KLF7, TGFBI, ARHGAP23, EPHX4, SIM2"</code></pre>
+</div>
+</div>
+<p>We can now run the function created above to obtain our enriched biological pathways.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load package</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gprofiler2)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Run custom function</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="fu">gprofiler</span>(<span class="at">genes =</span> up_genes_all, <span class="at">geneListName =</span> <span class="st">'genes_up'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="bordered"><code>[[1]]</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Part2_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre class="bordered"><code>
+[[2]]</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Part2_files/figure-html/unnamed-chunk-20-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Here, interestingly, we find that the two most enriched biological pathways is “Hippo signalling pathway”.</p>
+<p>From this insight we can start to <strong>generate new hypotheses</strong>, like the one tested in the study about the relevance of YAP/TAZ factors, which are indeed key downstream effectors of the Hippo signalling.</p>
+<blockquote class="blockquote">
+<p>💡 GO analyses might highlight very interesting patterns and generate hypotheses, but are many times quite hard to interpret depending also on the biological system we are studying.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>What information did we retrieve from the analysis?</p>
+</blockquote>
+<p>All information is stored in the <em>genes_up</em> table</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>gprof<span class="sc">$</span>genes_up <span class="sc">%&gt;%</span> <span class="fu">colnames</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="bordered"><code> [1] "Cluster"               "Category"              "ID"                   
+ [4] "Description"           "p.adjust"              "query_size"           
+ [7] "Intersection_size"     "term_size"             "effective_domain_size"
+[10] "intersection"          "GeneRatio"             "BgRatio"              </code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>gprof<span class="sc">$</span>genes_up <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">5</span>) <span class="sc">%&gt;%</span> <span class="fu">kbl</span>() <span class="sc">%&gt;%</span> <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Cluster</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Category</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">ID</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Description</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p.adjust</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">query_size</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Intersection_size</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">term_size</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">effective_domain_size</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">intersection</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">GeneRatio</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">BgRatio</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">genes_up</td>
+<td style="text-align: left;">GO:BP</td>
+<td style="text-align: left;">GO:0048856</td>
+<td style="text-align: left;">anatomical structure development</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1023</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: right;">5997</td>
+<td style="text-align: right;">21026</td>
+<td style="text-align: left;">CDH3,ASIC1,AJUBA,KLF7,TGFBI,SIM2,PITX1,KRT80,MMP12,ETV4,ATP11A,OTX1,LAMC1,PAX9,TESC,NCS1,NOS3,FLT1,STX2,GRHL1,FHL3,CLDN1,SLC29A1,HOMER1,IGF2BP3,FLNA,ACSL6,GDF11,SYT1,FUT1,ALDOC,BMP4,LPCAT1,EPHB1,CECR2,NES,PDX1,SLC9B2,GRIN2B,SEMA3A,NR2F1,FJX1,DUSP15,DGAT2,MET,TBX20,MSX2,TGFBR2,NAP1L1,ZIC5,CAMSAP2,PTPN13,FSTL3,NRN1,TUBB3,KIF3A,MDFI,JAG2,DMRTA2,CELSR3,VASH2,CX3CL1,GPRIN1,SPP1,ANO6,SHC3,ADRA2C,NKD1,FOXQ1,NOTUM,GDPD5,E2F5,KLK6,CBX2,TSPEAR,NEBL,AGT,FOXD1,BRSK2,IL23A,SLC39A6,DGKG,PCDHAC2,SH3TC2,TFAP2A,CA9,ENC1,SLC39A10,ASAP1,KLC3,LRP8,LHX6,EGFL7,CTSH,GJC3,LIPA,SALL4,FZD2,ACSL4,LZTS3,PDLIM7,NRP2,LEF1,SLC7A5,DKK4,MBTPS2,SEMA4D,CDKN2A,ADAMTS6,TCF7,ATG9B,FGD3,GABRE,ZNF385A,HOXC11,PLXNB3,ITPR1,GRIN2D,TXLNG,GAL,FZD7,ETV5,SOX14,CCDC78,CD81,TBX15,RHOQ,SPTBN2,GRHL3,ADAM19,CXCL8,RILPL2,CDC25B,LRP4,WT1,TH,WNT3,INPP5D,AQP6,KRT23,PDZD7,ZIC2,SIX1,EN2,RYR2,SIX4,NLGN2,ASCL2,KLK7,OSR2,RILPL1,SVEP1,SERPINE2,WDR72,FAIM2,SNAI1,MYL9,PDLIM3,PROX1,FGF19,CLEC7A,NFAM1,MMP9,TGM2,FOXC1,SOBP,FEZF1,PCDHAC1,TGIF2,MTHFD1L,DUOX2,PABPC1L,WWTR1,TIMP1,IL1A,POU4F1,FZD3,MSX1,DNAH5,SERPINE1,CXCL9,TNFRSF9,TGFBR3,NGFR,NEDD4,AMOTL2,ECM1,ONECUT2,MYC,RASIP1,CHI3L1,DLX6-AS1,TYRO3,STK3,PRDM8,ST8SIA6,CXCL1,PDGFB,STRIP2,QKI,ANXA1,CSF3R,S100A4,MKX,CPNE1,PLCB1,SOX12,SERPINI1,PHGDH,OBSCN,FOXL1,TLX1,CCDC136,KLK8,DMBX1,BATF,FOXF1,RUNX2,SRCIN1,PTPN12,PIK3R3,BICD1,RIPPLY3,GREM1,MMP17,NDP,PTPN14,ZMYND15,ARID5A,DRD2,CXCL10,PLAC1,NOTCH3,IL27RA,SEMA7A,WNT10A,EFEMP2,CCNO,FGD5,STX1B,GATA2,NEUROG2,ICAM1,STXBP1,GBX2,TP73,F7,STMN3,TTC9,SULT2B1,NEK5,DYRK3,DENND5A,WNT7B,DUSP4,PLAGL2,TRNP1,WFS1,OXTR,MYOM3,TNNI3,LAMA5,TNFRSF1B,EREG,MAD2L2,SSUH2,TNFRSF19,SRGN,INHBB,COL6A3,RASGRF1,SRPX2,KRT17,NFATC1,WTIP,ARHGDIB,MME,NLRP3,CCSAP,PPT1,DCLRE1C,DLX6,SOX4,EIF2S2,BAIAP2,CALB1,LOXL3,MAPT,PHOSPHO1,CYP26A1,GPR158,CMTM7,GAS2,IRX5,IMMP2L,RHCG,ETNK2,AXIN2,COL12A1,PAQR7,SLC2A12,TLR2,ATRX,RIPK2,PNPLA1,BMP7,FMNL3,NEB,P2RX7,PUS7,TEAD4,LGI2,SPNS2,SLC7A11,ADARB1,BAAT,DTNB,SH2B2,SOX1,GATA3,DZIP1,CD109,NANOS3,ITGAX,P2RX5,NMNAT2,VEGFA,MCIDAS,TNFAIP2,IL4I1,BCL6,DHRS2,CDON,SP6,PTGS2,APLF,GLIS2,MAP1A,OSCAR,PRKCG,TM4SF1,CSGALNACT1,RELT,CCDC40,KIF26B,NPHP1,CDKL5,BCL2L1,ARG2,TNC,TYROBP,SNX10,GPR137B,PGF,RGCC,MFGE8,PLXNA3,S1PR2,CLU,ZFP36L1,UBD,COL1A1,DLX3,EVX1,S100A9,KCNJ8,LTB,AMIGO2,SHH,RND2,RAG1,POTEF,L1CAM,APLN,RPGRIP1L,PARD6B,WDR19,ELK3,APOE,PLD6,NR4A3,SHANK3,MAMSTR,ITGB2,IL34,CORO1A,PRR7,SPIRE1,GPNMB,GPRC5B,AGAP2,GPCPD1,APOLD1,JAK3,PIWIL1,ARHGAP22,CSRP2,MLXIPL,DOCK11,NDRG4,FOSL1,GPSM1,ADAM8,IL1RAP,FOXO6,DLL3,CCR1,APCDD1,DLX1,PALM3,PBX4,PRRX1,FGF20,VCAN,MTURN,AK8,AREG,ANXA3,SPI1,CTHRC1,SLC11A2,BFSP1,MAPK11,VAT1,CEBPB,ANLN,SMARCD3,ZP3,UNC5A,SLC12A2,CRYAB,RUNX3,AMH,ARL13B,CALCR,C1QC,COL5A1,MFAP2,BRSK1,THBS2,VNN1,TSPAN2,AQP5,TG,IL17RD,LRFN1,EML1,SLC25A27,FGFRL1,SYCP2,TACSTD2,DYX1C1,ADA,TMOD2,HHEX,GJC2,SERPINF2,ACKR3,DSC3,PTPRU,CABYR,TRIP13,SLC40A1,EHD2,WASF1,SPEG,CSPG5,KRT7,COL18A1,DACH1,DUOX1,AXL,FLNC,CST7,CRABP2,EDAR,RASSF10,SPARC,MAPK12,XRCC2,ADGRB2,IGSF9B,C3AR1,NPM2,PECAM1,HCN1,HLF,SLC1A3,NRROS,LCK,TNF,FCER1G,ARMC2,LRRK2,ADAMTSL4,HAVCR2,PCDHGA1,NCMAP,PLEK,SERPINB5</td>
+<td style="text-align: right;">0.4887586</td>
+<td style="text-align: left;">5997/21026</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">genes_up</td>
+<td style="text-align: left;">GO:BP</td>
+<td style="text-align: left;">GO:0032502</td>
+<td style="text-align: left;">developmental process</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1023</td>
+<td style="text-align: right;">527</td>
+<td style="text-align: right;">6553</td>
+<td style="text-align: right;">21026</td>
+<td style="text-align: left;">CDH3,ASIC1,AJUBA,KLF7,TGFBI,SIM2,PITX1,KRT80,MMP12,ETV4,ATP11A,OTX1,LAMC1,SLC6A6,PAX9,TESC,NCS1,NOS3,FLT1,STX2,GRHL1,FHL3,CLDN1,FADS1,SLC29A1,HOMER1,IGF2BP3,FLNA,ACSL6,GDF11,SYT1,FUT1,ALDOC,BMP4,LPCAT1,EPHB1,CECR2,NES,PDX1,SLC9B2,GRIN2B,SEMA3A,NR2F1,FJX1,DUSP15,DGAT2,MET,TBX20,MSX2,TGFBR2,NAP1L1,TRIB3,ZIC5,CAMSAP2,EIF5A2,PTPN13,FSTL3,WWC3,NRN1,TUBB3,KIF3A,MDFI,GRK5,JAG2,DMRTA2,CELSR3,VASH2,CX3CL1,GPRIN1,SPP1,ANO6,SHC3,ADRA2C,NKD1,FOXQ1,WWC2,NOTUM,GDPD5,E2F5,KLK6,CBX2,TSPEAR,NEBL,AGT,FOXD1,BRSK2,IL23A,SLC39A6,DGKG,PCDHAC2,SH3TC2,TFAP2A,CA9,ENC1,SLC39A10,ASAP1,KLC3,LRP8,LHX6,EGFL7,CTSH,GJC3,LIPA,SALL4,FZD2,TXNRD3,ACSL4,LZTS3,CFAP97,PDLIM7,NRP2,LEF1,SLC7A5,DKK4,LRRC34,MBTPS2,SEMA4D,CDKN2A,ADAMTS6,TCF7,ATG9B,FGD3,GABRE,ZNF385A,HOXC11,PLXNB3,ITPR1,GRIN2D,TXLNG,GAL,FZD7,ETV5,SOX14,CCDC78,CD81,TCFL5,TBX15,RHOQ,SPTBN2,GRHL3,ADAM19,CXCL8,RILPL2,CDC25B,LRP4,WT1,TH,WNT3,INPP5D,AQP6,KRT23,PDZD7,ZIC2,SIX1,EN2,SPAG4,RYR2,SIX4,NLGN2,ASCL2,KLK7,OSR2,RILPL1,SVEP1,SERPINE2,WDR72,FAIM2,SNAI1,MYL9,PDLIM3,PROX1,FGF19,CLEC7A,NFAM1,MMP9,TGM2,FOXC1,SOBP,FEZF1,PCDHAC1,TGIF2,MTHFD1L,DUOX2,PABPC1L,WWTR1,TIMP1,IL1A,POU4F1,FZD3,MSX1,DNAH5,SERPINE1,CXCL9,TNFRSF9,TGFBR3,DLX4,NGFR,NEDD4,AMOTL2,ECM1,ONECUT2,MYC,RASIP1,CHI3L1,DLX6-AS1,TYRO3,STK3,PRDM8,ST8SIA6,CXCL1,PDGFB,STRIP2,QKI,SLFN5,ANXA1,CSF3R,S100A4,MKX,MMP11,CPNE1,PLCB1,SOX12,SERPINI1,PHGDH,OBSCN,FOXL1,TLX1,CCDC136,KLK8,DMBX1,BATF,FOXF1,RUNX2,SRCIN1,PTPN12,PIK3R3,BICD1,RIPPLY3,GREM1,MMP17,ZNF503,NDP,PTPN14,ZMYND15,ARID5A,DRD2,CXCL10,PLAC1,NOTCH3,IL27RA,SEMA7A,WNT10A,EFEMP2,CCNO,FGD5,STX1B,GATA2,NEUROG2,ICAM1,STXBP1,GBX2,TP73,F7,STMN3,TTC9,SULT2B1,NEK5,DYRK3,DENND5A,WNT7B,DUSP4,PLAGL2,TRNP1,WFS1,OXTR,MYOM3,TNNI3,LAMA5,TNFRSF1B,EREG,MAD2L2,SSUH2,TNFRSF19,SRGN,INHBB,COL6A3,RASGRF1,SRPX2,KRT17,NFATC1,WTIP,ARHGDIB,MME,NLRP3,CCSAP,PPT1,DCLRE1C,DLX6,SOX4,EIF2S2,BAIAP2,CALB1,LOXL3,MAPT,PHOSPHO1,CYP26A1,GPR158,CMTM7,GAS2,IRX5,OSBPL8,IMMP2L,RHCG,ETNK2,AXIN2,COL12A1,PAQR7,SPOCD1,SLC2A12,TLR2,ATRX,RIPK2,PNPLA1,BMP7,FMNL3,NEB,P2RX7,PUS7,TEAD4,LGI2,SPNS2,SLC7A11,ADARB1,BAAT,DTNB,SH2B2,SOX1,GATA3,DZIP1,CD109,NANOS3,ITGAX,P2RX5,NMNAT2,VEGFA,MCIDAS,TNFAIP2,IL4I1,BCL6,DHRS2,CDON,SP6,PTGS2,APLF,CYP24A1,GLIS2,MAP1A,OSCAR,PRKCG,TM4SF1,CSGALNACT1,RELT,CCDC40,KIF26B,NPHP1,CDKL5,BCL2L1,ARG2,TNC,TYROBP,SNX10,GPR137B,PGF,RGCC,IFITM1,MFGE8,PLXNA3,S1PR2,CLU,ZFP36L1,UBD,COL1A1,ELF5,DLX3,EVX1,S100A9,KCNJ8,LTB,AMIGO2,SHH,RND2,RAG1,POTEF,L1CAM,APLN,RPGRIP1L,PARD6B,WDR19,ELK3,APOE,PLD6,NR4A3,SHANK3,MAMSTR,ITGB2,IL34,CORO1A,PRR7,SPIRE1,GPNMB,GPRC5B,AGAP2,GPCPD1,APOLD1,JAK3,PIWIL1,ARHGAP22,CSRP2,MLXIPL,DOCK11,NDRG4,FOSL1,GPSM1,ADAM8,IL1RAP,FOXO6,DLL3,CCR1,APCDD1,DLX1,PALM3,PBX4,PRRX1,FGF20,VCAN,MTURN,AK8,STEAP4,AREG,ANXA3,SPI1,CTHRC1,SLC11A2,BFSP1,MAPK11,VAT1,CEBPB,ANLN,SMARCD3,ZP3,UNC5A,SLC12A2,CRYAB,RUNX3,AMH,ARL13B,CALCR,C1QC,COL5A1,MYBL1,MFAP2,SLC4A11,BRSK1,THBS2,VNN1,TSPAN2,AQP5,TG,IL17RD,LRFN1,ADAM28,EML1,SLC25A27,FGFRL1,SYCP2,TACSTD2,DYX1C1,ADA,TMOD2,HHEX,GJC2,SERPINF2,ACKR3,DSC3,PTPRU,CABYR,TRIP13,SLC40A1,EHD2,WASF1,SPEG,CSPG5,KRT7,COL18A1,DACH1,DUOX1,AXL,FLNC,CST7,CRABP2,EDAR,RASSF10,SPARC,MAPK12,XRCC2,ADGRB2,CCDC85B,IGSF9B,C3AR1,NPM2,PECAM1,HCN1,HLF,SLC1A3,NRROS,LCK,TNF,FCER1G,ARMC2,LRRK2,ADAMTSL4,HAVCR2,PCDHGA1,NCMAP,PLEKHB1,PLEK,SERPINB5</td>
+<td style="text-align: right;">0.5151515</td>
+<td style="text-align: left;">6553/21026</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">genes_up</td>
+<td style="text-align: left;">GO:BP</td>
+<td style="text-align: left;">GO:0032501</td>
+<td style="text-align: left;">multicellular organismal process</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1023</td>
+<td style="text-align: right;">563</td>
+<td style="text-align: right;">7322</td>
+<td style="text-align: right;">21026</td>
+<td style="text-align: left;">CDH3,ASIC1,KLF7,TGFBI,SIM2,PITX1,KRT80,MMP12,ETV4,ATP11A,OTX1,LAMC1,SLC6A6,TESC,CEMIP,NCS1,NOS3,FLT1,GRHL1,CLDN1,SLC29A1,HOMER1,IGF2BP3,PROCR,FLNA,ACSL6,GDF11,SYT1,FUT1,KIFC3,BMP4,LPCAT1,EPHB1,CLDN16,CECR2,NES,PDX1,SLC9B2,GRIN2B,SEMA3A,NR2F1,FJX1,DUSP15,DGAT2,MET,TBX20,MSX2,TGFBR2,NAP1L1,ZIC5,CAMSAP2,PTPN13,FSTL3,WWC3,NRN1,SLC4A8,KCNH2,TUBB3,KCNMB4,TRPC1,MDFI,JAG2,DMRTA2,CELSR3,VASH2,CX3CL1,GPRIN1,SPP1,PACS1,ANO6,SHC3,ADRA2C,NKD1,FOXQ1,WWC2,NOTUM,GDPD5,KLK6,CBX2,TSPEAR,SCD,CLDN2,NEBL,AGT,FOXD1,RGS16,BRSK2,IL23A,SLC39A6,DGKG,PCDHAC2,SH3TC2,HTR1D,TFAP2A,ENC1,SLC39A10,ASAP1,LRP8,LHX6,EGFL7,CTSH,SLC35D3,PRNP,GJC3,LIPA,SALL4,FZD2,ACSL4,BTN1A1,TFR2,LZTS3,PDLIM7,NRP2,ITGA9,LEF1,SLC7A5,DKK4,MBTPS2,PTP4A3,SEMA4D,CDKN2A,ADAMTS6,NPC1L1,GAD1,TCF7,ATG9B,ULBP1,GTF2IRD1,GABRE,ZNF385A,HOXC11,PLXNB3,ITPR1,GRIN2D,TXLNG,GAL,PTGES,FZD7,ETV5,SERPINA3,SOX14,CCDC78,CD81,NOD2,STX1A,ANXA6,GRAP,TBX15,SPTBN2,GRHL3,CXCL8,LRP4,AZGP1,WT1,TH,WNT3,INPP5D,AQP6,APOC1,PDZD7,ZIC2,SIX1,EN2,RYR2,SIX4,NLGN2,ASCL2,OSR2,SLC4A3,SVEP1,SERPINE2,FAIM2,SNAI1,MYL9,PDLIM3,PROX1,FGF19,BEST1,CLEC7A,NFAM1,MMP9,TGM2,HOMER3,FOXC1,SOBP,PLA2G4C,FEZF1,RAB11FIP3,PCDHAC1,ULBP2,TGIF2,MTHFD1L,DUOX2,SLC11A1,WWTR1,TIMP1,IL1A,POU4F1,FZD3,MSX1,DNAH5,SERPINE1,TNFRSF9,TGFBR3,NGFR,NEDD4,AMOTL2,ECM1,ONECUT2,MYC,RASIP1,CHI3L1,DLX6-AS1,TYRO3,STK3,GNAI2,PLAU,PRDM8,ST8SIA6,CXCL1,PDGFB,QKI,ANXA1,CSF3R,BST2,TPM2,CPNE1,PLCB1,SCARB1,SNTB1,SOX12,SERPINI1,PHGDH,FOXL1,CEP250,KLK8,DMBX1,BATF,FOXF1,RUNX2,SLC2A3,SRCIN1,PIK3R3,RIPPLY3,GREM1,MMP17,NDP,PTPN14,ARID5A,CACNG8,DRD2,CXCL10,FADS2,DYSF,NOTCH3,IL27RA,SEMA7A,THEMIS2,WNT10A,EFEMP2,STX1B,GATA2,NEUROG2,ICAM1,STXBP1,GBX2,TP73,F7,STMN3,REEP2,TTC9,SULT2B1,DYRK3,DENND5A,WNT7B,DUSP4,PLAGL2,TRNP1,WFS1,AQP9,OXTR,ADCY3,TNNI3,LAMA5,ZBTB33,TNFRSF1B,EREG,MAD2L2,TNFRSF19,ENTPD1,POLR3G,SRGN,INHBB,CEL,C2CD4A,RASGRF1,SRPX2,KRT17,NFATC1,LCAT,ARHGDIB,MME,SAA1,NLRP3,HSPH1,AKAP12,CCSAP,PPT1,DCLRE1C,DLX6,SOX4,CLEC11A,EIF2S2,BAIAP2,CALB1,LOXL3,MAPT,LAT2,PHOSPHO1,CYP26A1,GPR158,CMTM7,GAS2,IRX5,MUC6,IMMP2L,JSRP1,ETNK2,AXIN2,COL12A1,SLC2A12,TLR2,ATRX,RIPK2,ULBP3,BMP7,FMNL3,NEB,P2RX7,TEAD4,LGI2,SPNS2,SLC7A11,ADARB1,BAAT,DTNB,SH2B2,TMPRSS3,SOX1,GATA3,DZIP1,SLC13A3,CD109,RAB8B,FCGR3A,CLEC4A,ITGAX,P2RX5,NMNAT2,VEGFA,MTTP,TNFAIP2,IL4I1,BCL6,DHRS2,CDON,PTGS2,APLF,CYP24A1,GLIS2,MAP1A,OSCAR,FCGR2A,PRKCG,TM4SF1,CSGALNACT1,CCDC40,KIF26B,NPHP1,CDKL5,BCL2L1,CST1,ARG2,TNC,TYROBP,SNX10,GPR137B,PGF,RGCC,IFITM1,MFGE8,TSLP,TAS2R38,PLXNA3,S1PR2,CLU,ZFP36L1,UBD,COL1A1,DLX3,EVX1,S100A9,SLC38A3,F10,WDFY4,KCNJ8,LTB,AMIGO2,HILPDA,SHH,RND2,RAG1,POTEF,L1CAM,AOC2,ADGRE2,EHD3,APLN,RPGRIP1L,LAPTM5,PARD6B,WDR19,ELK3,APOE,PLD6,NR4A3,SHANK3,SLC6A20,ITGB2,IL34,CORO1A,RAD54B,CD6,NLRP1,PRR7,GPNMB,GPRC5B,AGAP2,APOLD1,JAK3,ARHGAP22,PLTP,DTNA,MLXIPL,DOCK11,NDRG4,MC1R,FOSL1,GPSM1,ADAM8,CACNG4,BTNL9,IL1RAP,FOXO6,DLL3,CCR1,KISS1,GJB4,APCDD1,PLA2G7,DLX1,PBX4,PRRX1,SYNM,FGF20,VCAN,PTAFR,CSF2RB,MTURN,AK8,AREG,GBP5,LCN2,ANXA3,SPI1,CALHM2,CTHRC1,SLC11A2,BFSP1,MAPK11,CEBPB,ANLN,SMARCD3,ZP3,UNC5A,SLC12A2,CRYAB,RUNX3,LCP2,AMH,ARL13B,CALCR,C1QC,COL5A1,SEPT5,LTB4R,MFAP2,ABCC2,BRSK1,THBS2,VNN1,TSPAN2,AQP5,HLA-DPA1,TG,IL17RD,LRFN1,EML1,FGFRL1,SAMSN1,SYCP2,TACSTD2,DYX1C1,ADA,PGC,TLR6,TMOD2,HHEX,GJC2,SERPINF2,ACKR3,DSC3,SLC40A1,WASF1,CSPG5,SNCG,KRT7,COL18A1,DACH1,DUOX1,RASL10B,AXL,RASA3,ATP1A3,CST7,CRABP2,EDAR,RASSF10,SPARC,XRCC2,ADGRB2,IGSF9B,SLC8A2,CLCN1,PLAT,C5,C3AR1,NPM2,PECAM1,HCN1,CD5,SLC1A3,NRROS,LCK,TNF,FCER1G,LRRK2,SLC22A3,HAVCR2,PCDHGA1,NCMAP,PLEK,SERPINB5</td>
+<td style="text-align: right;">0.5503421</td>
+<td style="text-align: left;">7322/21026</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">genes_up</td>
+<td style="text-align: left;">GO:BP</td>
+<td style="text-align: left;">GO:0009653</td>
+<td style="text-align: left;">anatomical structure morphogenesis</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1023</td>
+<td style="text-align: right;">281</td>
+<td style="text-align: right;">2713</td>
+<td style="text-align: right;">21026</td>
+<td style="text-align: left;">CDH3,AJUBA,KLF7,TGFBI,PITX1,MMP12,OTX1,PAX9,NOS3,FLT1,STX2,IGF2BP3,FLNA,GDF11,SYT1,FUT1,BMP4,EPHB1,CECR2,NES,PDX1,SEMA3A,FJX1,MET,TBX20,MSX2,TGFBR2,NRN1,TUBB3,KIF3A,MDFI,JAG2,CELSR3,VASH2,CX3CL1,SPP1,NKD1,FOXQ1,E2F5,TSPEAR,NEBL,AGT,FOXD1,BRSK2,PCDHAC2,TFAP2A,CA9,LRP8,EGFL7,CTSH,LIPA,SALL4,FZD2,LZTS3,NRP2,LEF1,DKK4,SEMA4D,ATG9B,FGD3,ZNF385A,HOXC11,PLXNB3,ITPR1,FZD7,CD81,TBX15,RHOQ,SPTBN2,GRHL3,CXCL8,RILPL2,LRP4,WT1,TH,WNT3,AQP6,PDZD7,SIX1,RYR2,SIX4,OSR2,RILPL1,SVEP1,SERPINE2,WDR72,FAIM2,SNAI1,MYL9,PROX1,FGF19,MMP9,TGM2,FOXC1,SOBP,FEZF1,TGIF2,MTHFD1L,DUOX2,WWTR1,IL1A,POU4F1,FZD3,MSX1,SERPINE1,CXCL9,TGFBR3,NGFR,NEDD4,AMOTL2,ECM1,ONECUT2,MYC,RASIP1,CHI3L1,STK3,PRDM8,STRIP2,QKI,ANXA1,CSF3R,CPNE1,OBSCN,FOXL1,CCDC136,KLK8,FOXF1,RUNX2,SRCIN1,PIK3R3,BICD1,GREM1,NDP,PTPN14,DRD2,CXCL10,NOTCH3,SEMA7A,WNT10A,EFEMP2,FGD5,GATA2,STXBP1,GBX2,WNT7B,DUSP4,TRNP1,MYOM3,TNNI3,LAMA5,TNFRSF1B,EREG,SSUH2,SRPX2,KRT17,NFATC1,WTIP,DLX6,SOX4,BAIAP2,CALB1,MAPT,PHOSPHO1,GAS2,IRX5,AXIN2,COL12A1,TLR2,ATRX,BMP7,FMNL3,NEB,P2RX7,TEAD4,ADARB1,SOX1,GATA3,CD109,ITGAX,VEGFA,TNFAIP2,BCL6,CDON,SP6,PTGS2,MAP1A,TM4SF1,CSGALNACT1,RELT,CCDC40,KIF26B,NPHP1,CDKL5,TNC,TYROBP,SNX10,PGF,RGCC,MFGE8,PLXNA3,CLU,ZFP36L1,COL1A1,DLX3,EVX1,KCNJ8,SHH,RND2,POTEF,L1CAM,APLN,RPGRIP1L,PARD6B,WDR19,ELK3,APOE,PLD6,NR4A3,SHANK3,ITGB2,CORO1A,SPIRE1,GPNMB,APOLD1,ARHGAP22,CSRP2,MLXIPL,NDRG4,ADAM8,DLL3,APCDD1,DLX1,PALM3,PBX4,PRRX1,FGF20,AREG,ANXA3,SPI1,CTHRC1,SLC11A2,VAT1,CEBPB,SMARCD3,ZP3,UNC5A,SLC12A2,CRYAB,AMH,ARL13B,COL5A1,MFAP2,BRSK1,THBS2,AQP5,FGFRL1,SYCP2,TACSTD2,ADA,TMOD2,HHEX,SERPINF2,ACKR3,SLC40A1,EHD2,WASF1,CSPG5,COL18A1,FLNC,CRABP2,EDAR,SPARC,XRCC2,ADGRB2,C3AR1,HCN1,SLC1A3,TNF,LRRK2,NCMAP,SERPINB5</td>
+<td style="text-align: right;">0.2746823</td>
+<td style="text-align: left;">2713/21026</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">genes_up</td>
+<td style="text-align: left;">GO:BP</td>
+<td style="text-align: left;">GO:0007275</td>
+<td style="text-align: left;">multicellular organism development</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1023</td>
+<td style="text-align: right;">401</td>
+<td style="text-align: right;">4727</td>
+<td style="text-align: right;">21026</td>
+<td style="text-align: left;">CDH3,ASIC1,KLF7,TGFBI,SIM2,PITX1,MMP12,ETV4,ATP11A,OTX1,TESC,NCS1,NOS3,FLT1,GRHL1,CLDN1,IGF2BP3,FLNA,ACSL6,GDF11,SYT1,FUT1,BMP4,LPCAT1,EPHB1,CECR2,NES,PDX1,SLC9B2,GRIN2B,SEMA3A,NR2F1,FJX1,DUSP15,MET,TBX20,MSX2,TGFBR2,NAP1L1,ZIC5,CAMSAP2,PTPN13,FSTL3,NRN1,TUBB3,MDFI,JAG2,DMRTA2,CELSR3,VASH2,CX3CL1,GPRIN1,SPP1,ANO6,SHC3,ADRA2C,NKD1,NOTUM,GDPD5,KLK6,CBX2,NEBL,AGT,FOXD1,BRSK2,IL23A,DGKG,PCDHAC2,SH3TC2,TFAP2A,ENC1,ASAP1,LRP8,LHX6,EGFL7,CTSH,GJC3,LIPA,SALL4,FZD2,ACSL4,LZTS3,PDLIM7,NRP2,LEF1,SLC7A5,DKK4,MBTPS2,SEMA4D,CDKN2A,ADAMTS6,TCF7,ATG9B,GABRE,HOXC11,PLXNB3,ITPR1,GRIN2D,TXLNG,GAL,FZD7,ETV5,SOX14,TBX15,SPTBN2,GRHL3,CXCL8,LRP4,WT1,TH,WNT3,INPP5D,PDZD7,ZIC2,SIX1,EN2,RYR2,SIX4,NLGN2,ASCL2,OSR2,SVEP1,SERPINE2,FAIM2,SNAI1,PDLIM3,PROX1,FGF19,NFAM1,MMP9,TGM2,FOXC1,SOBP,FEZF1,PCDHAC1,TGIF2,MTHFD1L,DUOX2,WWTR1,TIMP1,IL1A,POU4F1,FZD3,MSX1,DNAH5,SERPINE1,TGFBR3,NGFR,NEDD4,AMOTL2,ECM1,ONECUT2,MYC,RASIP1,CHI3L1,DLX6-AS1,TYRO3,STK3,PRDM8,ST8SIA6,CXCL1,PDGFB,QKI,ANXA1,CSF3R,CPNE1,PLCB1,SOX12,SERPINI1,PHGDH,FOXL1,KLK8,DMBX1,BATF,FOXF1,RUNX2,SRCIN1,PIK3R3,RIPPLY3,GREM1,MMP17,NDP,PTPN14,ARID5A,DRD2,CXCL10,NOTCH3,IL27RA,SEMA7A,WNT10A,EFEMP2,STX1B,GATA2,NEUROG2,STXBP1,GBX2,TP73,STMN3,TTC9,SULT2B1,DENND5A,WNT7B,DUSP4,PLAGL2,TRNP1,WFS1,OXTR,TNNI3,LAMA5,TNFRSF1B,EREG,MAD2L2,SRGN,INHBB,RASGRF1,SRPX2,KRT17,NFATC1,ARHGDIB,MME,NLRP3,CCSAP,PPT1,DCLRE1C,DLX6,SOX4,EIF2S2,BAIAP2,CALB1,LOXL3,MAPT,PHOSPHO1,CYP26A1,GPR158,GAS2,IRX5,IMMP2L,ETNK2,AXIN2,COL12A1,SLC2A12,TLR2,ATRX,RIPK2,BMP7,FMNL3,NEB,P2RX7,TEAD4,LGI2,SPNS2,SLC7A11,ADARB1,BAAT,DTNB,SH2B2,SOX1,GATA3,DZIP1,CD109,ITGAX,P2RX5,NMNAT2,VEGFA,TNFAIP2,IL4I1,BCL6,CDON,PTGS2,APLF,GLIS2,MAP1A,PRKCG,TM4SF1,CSGALNACT1,CCDC40,KIF26B,NPHP1,CDKL5,BCL2L1,ARG2,TNC,TYROBP,SNX10,GPR137B,PGF,RGCC,MFGE8,PLXNA3,S1PR2,CLU,ZFP36L1,COL1A1,DLX3,EVX1,S100A9,KCNJ8,LTB,AMIGO2,SHH,RND2,RAG1,POTEF,L1CAM,APLN,RPGRIP1L,PARD6B,WDR19,ELK3,APOE,PLD6,NR4A3,SHANK3,ITGB2,IL34,GPNMB,GPRC5B,APOLD1,JAK3,ARHGAP22,NDRG4,FOSL1,GPSM1,ADAM8,IL1RAP,FOXO6,DLL3,CCR1,APCDD1,DLX1,PBX4,PRRX1,FGF20,VCAN,MTURN,AK8,AREG,ANXA3,SPI1,CTHRC1,SLC11A2,BFSP1,MAPK11,CEBPB,SMARCD3,ZP3,UNC5A,SLC12A2,CRYAB,RUNX3,AMH,ARL13B,C1QC,COL5A1,MFAP2,BRSK1,THBS2,VNN1,TSPAN2,AQP5,TG,LRFN1,EML1,FGFRL1,SYCP2,TACSTD2,DYX1C1,ADA,TMOD2,HHEX,GJC2,SERPINF2,ACKR3,DSC3,SLC40A1,WASF1,CSPG5,COL18A1,DACH1,DUOX1,AXL,CST7,CRABP2,EDAR,RASSF10,SPARC,XRCC2,ADGRB2,IGSF9B,C3AR1,NPM2,PECAM1,HCN1,SLC1A3,NRROS,TNF,LRRK2,HAVCR2,PCDHGA1,NCMAP,SERPINB5</td>
+<td style="text-align: right;">0.3919844</td>
+<td style="text-align: left;">4727/21026</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p>We can summarize the number of hits for each pathway category</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>gprof<span class="sc">$</span>genes_up <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(Category) <span class="sc">%&gt;%</span> <span class="fu">tally</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="bordered"><code># A tibble: 9 × 2
+  Category     n
+  &lt;chr&gt;    &lt;int&gt;
+1 GO:BP      474
+2 GO:CC       58
+3 GO:MF       34
+4 HPA         23
+5 KEGG        10
+6 MIRNA        1
+7 REAC         9
+8 TF         354
+9 WP           8</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(gprof<span class="sc">$</span>genes_up<span class="sc">$</span>Category)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="bordered"><code>
+GO:BP GO:CC GO:MF   HPA  KEGG MIRNA  REAC    TF    WP 
+  474    58    34    23    10     1     9   354     8 </code></pre>
+</div>
+</div>
+<p>Let’s retrieve the KEGG pathways</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>gprof<span class="sc">$</span>genes_up <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Category<span class="sc">==</span><span class="st">"KEGG"</span>) <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">6</span>) <span class="sc">%&gt;%</span> <span class="fu">kbl</span>() <span class="sc">%&gt;%</span> <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Cluster</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Category</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">ID</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Description</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p.adjust</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">query_size</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Intersection_size</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">term_size</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">effective_domain_size</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">intersection</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">GeneRatio</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">BgRatio</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">genes_up</td>
+<td style="text-align: left;">KEGG</td>
+<td style="text-align: left;">KEGG:04390</td>
+<td style="text-align: left;">Hippo signaling pathway</td>
+<td style="text-align: right;">0.0000695</td>
+<td style="text-align: right;">510</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">157</td>
+<td style="text-align: right;">8484</td>
+<td style="text-align: left;">AJUBA,NKD2,BMP4,TGFBR2,NKD1,FZD2,LEF1,TCF7,FZD7,WNT3,WWTR1,FZD3,SERPINE1,PPP2R2C,MYC,STK3,WNT10A,TP73,WNT7B,WTIP,AXIN2,BMP7,TEAD4,PARD6B,ITGB2,AREG,AMH</td>
+<td style="text-align: right;">0.0529412</td>
+<td style="text-align: left;">157/8484</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">genes_up</td>
+<td style="text-align: left;">KEGG</td>
+<td style="text-align: left;">KEGG:05323</td>
+<td style="text-align: left;">Rheumatoid arthritis</td>
+<td style="text-align: right;">0.0004383</td>
+<td style="text-align: right;">510</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">88</td>
+<td style="text-align: right;">8484</td>
+<td style="text-align: left;">FLT1,IL23A,ATP6V1C2,MMP1,CXCL8,IL1A,CXCL3,CXCL1,ICAM1,TLR2,VEGFA,LTB,ITGB2,HLA-DPA1,ATP6V1E2,TNF,CXCL2,CCL20</td>
+<td style="text-align: right;">0.0352941</td>
+<td style="text-align: left;">88/8484</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">genes_up</td>
+<td style="text-align: left;">KEGG</td>
+<td style="text-align: left;">KEGG:04060</td>
+<td style="text-align: left;">Cytokine-cytokine receptor interaction</td>
+<td style="text-align: right;">0.0005119</td>
+<td style="text-align: right;">510</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">291</td>
+<td style="text-align: right;">8484</td>
+<td style="text-align: left;">GDF11,BMP4,TGFBR2,IFNAR2,CX3CL1,TNFSF15,IL23A,CXCL8,IL1A,CXCL9,TNFRSF9,NGFR,CXCL3,CXCL11,CXCL1,CSF3R,CXCL10,IL27RA,TNFRSF1B,TNFRSF6B,RELL2,TNFRSF19,INHBB,BMP7,RELT,TSLP,LTB,IL34,IL1RAP,CCR1,CSF2RB,AMH,CXCL16,ACKR3,EDAR,TNF,CXCL2,CCL20</td>
+<td style="text-align: right;">0.0745098</td>
+<td style="text-align: left;">291/8484</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">genes_up</td>
+<td style="text-align: left;">KEGG</td>
+<td style="text-align: left;">KEGG:04657</td>
+<td style="text-align: left;">IL-17 signaling pathway</td>
+<td style="text-align: right;">0.0008499</td>
+<td style="text-align: right;">510</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">8484</td>
+<td style="text-align: left;">MMP1,CXCL8,MMP9,CXCL3,CXCL1,CXCL10,MAPK15,TRAF5,PTGS2,S100A9,FOSL1,LCN2,MAPK11,CEBPB,MAPK12,TNF,CXCL2,CCL20</td>
+<td style="text-align: right;">0.0352941</td>
+<td style="text-align: left;">92/8484</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">genes_up</td>
+<td style="text-align: left;">KEGG</td>
+<td style="text-align: left;">KEGG:04610</td>
+<td style="text-align: left;">Complement and coagulation cascades</td>
+<td style="text-align: right;">0.0013209</td>
+<td style="text-align: right;">510</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">86</td>
+<td style="text-align: right;">8484</td>
+<td style="text-align: left;">PROCR,SERPINE2,SERPINE1,PLAU,C2,F7,ITGAX,CLU,F10,ITGB2,C1QC,CFB,SERPINF2,PLAT,C5,C3AR1,C4B</td>
+<td style="text-align: right;">0.0333333</td>
+<td style="text-align: left;">86/8484</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">genes_up</td>
+<td style="text-align: left;">KEGG</td>
+<td style="text-align: left;">KEGG:04668</td>
+<td style="text-align: left;">TNF signaling pathway</td>
+<td style="text-align: right;">0.0045686</td>
+<td style="text-align: right;">510</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">113</td>
+<td style="text-align: right;">8484</td>
+<td style="text-align: left;">CREB5,CX3CL1,TRAF1,NOD2,MMP9,CXCL3,CXCL1,PIK3R3,CXCL10,ICAM1,TNFRSF1B,TRAF5,PTGS2,MAPK11,CEBPB,MAPK12,TNF,CXCL2,CCL20</td>
+<td style="text-align: right;">0.0372549</td>
+<td style="text-align: left;">113/8484</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p>Can you retrieve the differentially expressed genes that are part of the Hippo signaling pathway?</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre class="bordered"><code>[1] "AJUBA,NKD2,BMP4,TGFBR2,NKD1,FZD2,LEF1,TCF7,FZD7,WNT3,WWTR1,FZD3,SERPINE1,PPP2R2C,MYC,STK3,WNT10A,TP73,WNT7B,WTIP,AXIN2,BMP7,TEAD4,PARD6B,ITGB2,AREG,AMH"</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre class="bordered"><code>[1] "CREB5,CX3CL1,TRAF1,NOD2,MMP9,CXCL3,CXCL1,PIK3R3,CXCL10,ICAM1,TNFRSF1B,TRAF5,PTGS2,MAPK11,CEBPB,MAPK12,TNF,CXCL2,CCL20"</code></pre>
+</div>
+</div>
+<p>Run enrichment analysis for genes downregulated in tumor samples</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract upregulated genes</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>down_genes_all <span class="ot">&lt;-</span> res <span class="sc">%&gt;%</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(FDR <span class="sc">&lt;</span> <span class="fl">0.01</span> <span class="sc">&amp;</span> logFC <span class="sc">&lt;</span> <span class="sc">-</span><span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(FDR) <span class="sc">%&gt;%</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames</span>()</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"Number of tumor downregulated genes:"</span>, <span class="fu">length</span>(down_genes_all))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="bordered"><code>[1] "Number of tumor downregulated genes: 863"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">"Top differentially expressed genes:"</span>, <span class="fu">paste</span>(<span class="fu">head</span>(down_genes_all, <span class="dv">10</span>), <span class="at">collapse =</span> <span class="st">", "</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="bordered"><code>[1] "Top differentially expressed genes:BEST4, NANS, SUCLG1, CCNJL, SGSM3, UGDH, NDUFS2, UGP2, LGALS4, GLTP"</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run again custom function</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gprofiler</span>(<span class="at">genes =</span> down_genes_all, <span class="at">geneListName =</span> <span class="st">'genes_down'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="bordered"><code>[[1]]</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Part2_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre class="bordered"><code>
+[[2]]</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Part2_files/figure-html/unnamed-chunk-28-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># What class is gprof?</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(gprof)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="bordered"><code>[1] "list"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># What are the dimensions of the elements in gprof?</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(gprof, dim)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="bordered"><code>$genes_up
+[1] 971  12
+
+$genes_down
+[1] 435  12</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>🤔 What analysis would you perform to show that PDOs resemble the <em>ex vivo</em> tumor samples?</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>💡 You can use another tool for pathway enrichment analysis callsed <code>clusterProfiler</code>.</p>
+</blockquote>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># suppressPackageStartupMessages(</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   BiocManager::install("clusterProfiler")</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="co"># )</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co">#head(ego)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot results of gene ontology enrichment</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="co">#goplot(ego, firstSigNodes=10)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s now plot the results with a ranked dotplot. Gene ontology terms are ranked from the top to the bottom based on the Gene Ratio (number of genes intersecting the term / total number of unique genes provided). The significance of the enrichment (p.adjust) is depicted by the color, whilst the size of the dot represents the number of genes in our geneset (e.g.&nbsp;up-regulated genes) that overlap the specific GO term.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co">#dotplot(ego, showCategory=20) + ggtitle(paste0("Dotplot for GO-", ontology, "enrichment")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="take-home-messages" class="level2">
+<h2 class="anchored" data-anchor-id="take-home-messages">Take-home Messages 🏠</h2>
+<p><strong>Congratulations!</strong> You got the end of the course and now hopefully know some crucial aspects of a RNA-seq analysis workflow! Some of the key concepts that we have explored during the course can enable us to reach some distilled points of interest:</p>
+<ul>
+<li><p>Design your experiments carefully with data analysis in mind!</p></li>
+<li><p>Data needs to be carefully explored to avoid systematic errors in the analyses!</p></li>
+<li><p>Plot and Visualize as much as possible!</p></li>
+<li><p>Not all information is useful, remember that it all depends on the biological question!</p></li>
+<li><p>Omics outputs are immensely rich and one experiment can be used to answer a plethora of questions!</p></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

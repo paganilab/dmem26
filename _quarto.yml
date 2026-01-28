@@ -4,10 +4,10 @@ project:
 
 # Top navbar
 website:
-  favicon: ./pics/RNA-seq_icon.png
+  favicon: ./pics/RNA-seq_icon_v2.png
   title: "2026 D-MEM PhD UNIMI"
   navbar:
-    logo: ./pics/RNA-seq_icon.png
+    logo: ./pics/RNA-seq_icon_v2.png
     left:
       - href: ./pages/index.Rmd
         text: Home
