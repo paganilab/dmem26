@@ -1479,11 +1479,12 @@ FALSE  TRUE
 <li><strong>Composition Bias</strong>: these refer to differences in the composition of sequences across libraries that can arise due to a few highly differentially expressed genes between samples, differences in the number of genes expressed between samples, or presence of contamination.</li>
 </ol>
 <p><strong>Highly expressed genes consume more sequencing resources</strong> and thereby <strong>suppress the representation of other genes</strong>. Scaling by library size fails to correct for this as composition biases can still occur in libraries of the same size.</p>
-<p>In the example below, the majority of counts for sample A is related to the differentially expressed gene and therefore this might cause other genes in that sample to be normalized by this high number of counts, resulting in them appearing to be expressed at a lower level as opposed to the same genes in sample B.</p>
+<p>Form edgeR: <em>RNA-seq measure relative expression rather than absolute expression. This becomes important for differential expression analyses when a small number of genes are very highly expressed in some samples but not in others. If a small proportion of highly expressed genes consume a substantial proportion of the total library size for a particular sample, this will cause the remaining genes to be under-sampled for that sample. Unless this effect is adjusted for, the remaining genes may falsely appear to be down-regulated in that sample.</em></p>
+<p>In the example below, the majority of counts for sample A is related to one highly expressed gene and therefore this might cause other genes in that sample to be normalized by this high number of counts, resulting in them appearing to be expressed at a lower level as opposed to the same genes in sample B.</p>
 <center>
 <img src="https://hbctraining.github.io/DGE_workshop/img/normalization_methods_composition.png" width="500">
 </center>
-<p>Out of all these, we will use one of the more advanced ones provided in the <code>edgeR</code> package which will be now introduced.</p>
+<p>Here, we will use one of the most robust normalization methods provided in the <code>edgeR</code> package which is introduced below.</p>
 </section>
 <section id="about-the-edger-package" class="level2">
 <h2 class="anchored" data-anchor-id="about-the-edger-package">About the <code>edgeR</code> Package</h2>
@@ -1568,7 +1569,7 @@ FALSE  TRUE
 <p><img src="../pics/Batch_effect.png" class="img-fluid" width="400"></p>
 <p><a href="https://scilifelab.github.io/courses/ngsintro/1905/slides/rnaseq/presentation.html#7">Source</a></p>
 </center>
-<p>For instance, if you found that in your dataset part of the variability is due to the different patients from which the biological replicates come from, but you want to assess other biologically driven differences due to a certain treatment, you could modify your design formula in order to <strong>check differences due to the treatment, while controlling simultaneously for patient-to-patient variability</strong>.</p>
+<p>For instance, if you found that in your dataset part of the variability is due to the different patients from which the biological replicates come from, but you want to assess other biologically driven differences due to a certain treatment, you could modify your design formula in order to <strong>check differences due to the treatment, while controlling simultaneously for patient-to-patient variability</strong>. In other words, to find genes that are differentially expressed in tumors compared to normal tissues, adjusting for baseline differences between the patients.</p>
 <blockquote class="blockquote">
 <p>In this case, the design formula would be something similar to:</p>
 </blockquote>
@@ -2456,7 +2457,7 @@ TRUE
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Part1_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="Part1_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -2472,7 +2473,7 @@ TRUE
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Part1_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="Part1_files/figure-html/unnamed-chunk-47-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -2513,7 +2514,7 @@ TRUE
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Part1_files/figure-html/unnamed-chunk-46-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="Part1_files/figure-html/unnamed-chunk-48-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -2597,7 +2598,7 @@ TRUE
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Part1_files/figure-html/unnamed-chunk-53-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="Part1_files/figure-html/unnamed-chunk-55-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -2621,7 +2622,7 @@ TRUE
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Part1_files/figure-html/unnamed-chunk-54-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="Part1_files/figure-html/unnamed-chunk-56-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -2659,7 +2660,7 @@ TRUE
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Part1_files/figure-html/unnamed-chunk-55-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="768"></p>
+<p><img src="Part1_files/figure-html/unnamed-chunk-58-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -2827,7 +2828,7 @@ TRUE
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Part1_files/figure-html/unnamed-chunk-57-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="Part1_files/figure-html/unnamed-chunk-60-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -2902,7 +2903,7 @@ Cumulative Proportion  1.00000 1.000e+00</code></pre>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Part1_files/figure-html/unnamed-chunk-62-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="Part1_files/figure-html/unnamed-chunk-65-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -2921,7 +2922,7 @@ Cumulative Proportion  1.00000 1.000e+00</code></pre>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Part1_files/figure-html/unnamed-chunk-64-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="Part1_files/figure-html/unnamed-chunk-67-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -2937,7 +2938,7 @@ Cumulative Proportion  1.00000 1.000e+00</code></pre>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Part1_files/figure-html/unnamed-chunk-65-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="Part1_files/figure-html/unnamed-chunk-68-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -3620,7 +3621,7 @@ Cumulative Proportion  1.00000 1.000e+00</code></pre>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Part1_files/figure-html/unnamed-chunk-68-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="Part1_files/figure-html/unnamed-chunk-71-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -3749,7 +3750,7 @@ Up             1805</code></pre>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Part1_files/figure-html/unnamed-chunk-82-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="Part1_files/figure-html/unnamed-chunk-85-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -3784,25 +3785,24 @@ Up             1805</code></pre>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Part1_files/figure-html/unnamed-chunk-83-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="Part1_files/figure-html/unnamed-chunk-86-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Add on the volcano plot the names of the most interesting genes</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select the top differentially expressed genes</span></span>
-<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>names_list <span class="ot">&lt;-</span> volcano_corr <span class="sc">%&gt;%</span></span>
-<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a>            <span class="fu">filter</span>(<span class="fu">abs</span>(logFC)<span class="sc">&gt;</span><span class="dv">2</span> <span class="sc">&amp;</span> FDR<span class="sc">&lt;</span><span class="fl">0.01</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a>            <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="fu">abs</span>(logFC))) <span class="sc">%&gt;%</span></span>
-<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a>            <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb92-7"><a href="#cb92-7" aria-hidden="true" tabindex="-1"></a>            <span class="fu">pull</span>(GeneID)</span>
-<span id="cb92-8"><a href="#cb92-8" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(names_list)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select genes with greatest changes in expression (log2 fold-change)</span></span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>names_list <span class="ot">&lt;-</span> volcano_corr <span class="sc">%&gt;%</span></span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>            <span class="fu">filter</span>(<span class="fu">abs</span>(logFC)<span class="sc">&gt;</span><span class="dv">2</span> <span class="sc">&amp;</span> FDR<span class="sc">&lt;</span><span class="fl">0.01</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a>            <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="fu">abs</span>(logFC))) <span class="sc">%&gt;%</span></span>
+<span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a>            <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a>            <span class="fu">pull</span>(GeneID)</span>
+<span id="cb92-7"><a href="#cb92-7" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(names_list)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre class="bordered"><code>[1] 20</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select genes with greatest changes in expression (log2 fold-change)</span></span>
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select the top differentially expressed genes</span></span>
 <span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>neg_fc <span class="ot">&lt;-</span> res <span class="sc">%&gt;%</span> <span class="fu">filter</span>(logFC <span class="sc">&lt;</span> <span class="sc">-</span><span class="dv">2</span> <span class="sc">&amp;</span> FDR <span class="sc">&lt;</span> <span class="fl">0.01</span>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(FDR) <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">6</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(GeneID)</span>
 <span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a>pos_fc <span class="ot">&lt;-</span> res <span class="sc">%&gt;%</span> <span class="fu">filter</span>(logFC <span class="sc">&gt;</span> <span class="dv">2</span> <span class="sc">&amp;</span> FDR <span class="sc">&lt;</span> <span class="fl">0.01</span>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(FDR) <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">6</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(GeneID)</span>
@@ -3842,41 +3842,38 @@ Up             1805</code></pre>
 <span id="cb98-21"><a href="#cb98-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">colour=</span><span class="st">"#990000"</span>, <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
 <span id="cb98-22"><a href="#cb98-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">trans =</span> <span class="st">"log1p"</span>) <span class="sc">+</span></span>
 <span id="cb98-23"><a href="#cb98-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label_repel</span>(<span class="at">data=</span>volcano_corr[<span class="fu">which</span>(volcano_corr<span class="sc">$</span>names<span class="sc">==</span><span class="st">'mark'</span> <span class="sc">&amp;</span> volcano_corr<span class="sc">$</span>threshold<span class="sc">==</span><span class="st">'A'</span>),], <span class="fu">aes</span>(<span class="at">label=</span>GeneID), <span class="at">max.overlaps =</span> <span class="dv">30</span>, <span class="at">color=</span><span class="st">'black'</span>, <span class="at">size=</span><span class="dv">4</span>, <span class="at">fill=</span><span class="st">'white'</span>, <span class="at">fontface=</span><span class="st">'italic'</span>) <span class="sc">+</span></span>
-<span id="cb98-24"><a href="#cb98-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_label_repel</span>(<span class="at">data=</span>volcano_corr[<span class="fu">which</span>(volcano_corr<span class="sc">$</span>names<span class="sc">==</span><span class="st">'mark'</span> <span class="sc">&amp;</span> volcano_corr<span class="sc">$</span>threshold<span class="sc">==</span><span class="st">'B'</span>),], <span class="fu">aes</span>(<span class="at">label=</span>GeneID), <span class="at">max.overlaps =</span> <span class="dv">30</span>, <span class="at">color=</span><span class="st">'black'</span>, <span class="at">size=</span><span class="dv">4</span>, <span class="at">fill=</span><span class="st">'white'</span>, <span class="at">fontface=</span><span class="st">'italic'</span>)</span>
+<span id="cb98-24"><a href="#cb98-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label_repel</span>(<span class="at">data=</span>volcano_corr[<span class="fu">which</span>(volcano_corr<span class="sc">$</span>names<span class="sc">==</span><span class="st">'mark'</span> <span class="sc">&amp;</span> volcano_corr<span class="sc">$</span>threshold<span class="sc">==</span><span class="st">'B'</span>),], <span class="fu">aes</span>(<span class="at">label=</span>GeneID), <span class="at">max.overlaps =</span> <span class="dv">30</span>, <span class="at">color=</span><span class="st">'black'</span>, <span class="at">size=</span><span class="dv">4</span>, <span class="at">fill=</span><span class="st">'white'</span>, <span class="at">fontface=</span><span class="st">'italic'</span>)</span>
 <span id="cb98-25"><a href="#cb98-25" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb98-26"><a href="#cb98-26" aria-hidden="true" tabindex="-1"></a>volc_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Part1_files/figure-html/unnamed-chunk-85-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="Part1_files/figure-html/unnamed-chunk-88-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a>  <span class="co"># mutate(., stroke = ifelse(.$GeneID %in% names_list &amp; volcano_corr$FDR &lt; padj_val &amp; volcano_corr$logFC &gt; log2FC_val, 2, 0), </span></span>
-<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                                              names=ifelse(.$GeneID %in% names_list,'mark','leave')) %&gt;%</span></span>
-<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                                                   .[order(.$names),]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="visualizing-results-with-heatmaps" class="level3">
 <h3 class="anchored" data-anchor-id="visualizing-results-with-heatmaps">Visualizing results with heatmaps</h3>
 <p>We can also plot differentially expressed genes in the two conditions of our interest using heatmaps. In this case, we select genes based on their significance (P-value &lt; 0.01) and visualize how their expression values change across samples.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select differentially expressed genes</span></span>
-<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a>diffs <span class="ot">&lt;-</span> <span class="fu">rbind</span>(volcano_corr[volcano_corr<span class="sc">$</span>threshold <span class="sc">==</span> <span class="st">"A"</span>,], volcano_corr[volcano_corr<span class="sc">$</span>threshold <span class="sc">==</span> <span class="st">"B"</span>,]) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(GeneID)</span>
-<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset log2 transformed expression matrix for genes of interest</span></span>
-<span id="cb100-5"><a href="#cb100-5" aria-hidden="true" tabindex="-1"></a>mtx <span class="ot">&lt;-</span> log2dds[diffs,]</span>
-<span id="cb100-6"><a href="#cb100-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb100-7"><a href="#cb100-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create another table for annotating the heatmap with colors</span></span>
-<span id="cb100-8"><a href="#cb100-8" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(sampleinfo[,<span class="fu">c</span>(<span class="st">"group"</span>,<span class="st">'patient'</span>), <span class="at">drop=</span><span class="cn">FALSE</span>])</span>
-<span id="cb100-9"><a href="#cb100-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb100-10"><a href="#cb100-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot heatmap</span></span>
-<span id="cb100-11"><a href="#cb100-11" aria-hidden="true" tabindex="-1"></a>diff_heat <span class="ot">&lt;-</span> <span class="fu">pheatmap</span>(mtx, <span class="at">cluster_rows=</span><span class="cn">TRUE</span>, <span class="at">show_rownames=</span><span class="cn">FALSE</span>,<span class="at">cluster_cols=</span><span class="cn">TRUE</span>, <span class="at">annotation_col=</span>df, <span class="at">scale =</span> <span class="st">"row"</span>)</span>
-<span id="cb100-12"><a href="#cb100-12" aria-hidden="true" tabindex="-1"></a>diff_heat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select differentially expressed genes</span></span>
+<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>diffs <span class="ot">&lt;-</span> <span class="fu">rbind</span>(volcano_corr[volcano_corr<span class="sc">$</span>threshold <span class="sc">==</span> <span class="st">"A"</span>,], volcano_corr[volcano_corr<span class="sc">$</span>threshold <span class="sc">==</span> <span class="st">"B"</span>,]) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(GeneID)</span>
+<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset log2 transformed expression matrix for genes of interest</span></span>
+<span id="cb99-5"><a href="#cb99-5" aria-hidden="true" tabindex="-1"></a>mtx <span class="ot">&lt;-</span> log2dds[diffs,]</span>
+<span id="cb99-6"><a href="#cb99-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb99-7"><a href="#cb99-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create another table for annotating the heatmap with colors</span></span>
+<span id="cb99-8"><a href="#cb99-8" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(sampleinfo[,<span class="fu">c</span>(<span class="st">"group"</span>,<span class="st">'patient'</span>), <span class="at">drop=</span><span class="cn">FALSE</span>])</span>
+<span id="cb99-9"><a href="#cb99-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb99-10"><a href="#cb99-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot heatmap</span></span>
+<span id="cb99-11"><a href="#cb99-11" aria-hidden="true" tabindex="-1"></a>diff_heat <span class="ot">&lt;-</span> <span class="fu">pheatmap</span>(mtx, <span class="at">cluster_rows=</span><span class="cn">TRUE</span>, <span class="at">show_rownames=</span><span class="cn">FALSE</span>,<span class="at">cluster_cols=</span><span class="cn">TRUE</span>, <span class="at">annotation_col=</span>df, <span class="at">scale =</span> <span class="st">"row"</span>)</span>
+<span id="cb99-12"><a href="#cb99-12" aria-hidden="true" tabindex="-1"></a>diff_heat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Part1_files/figure-html/unnamed-chunk-86-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="Part1_files/figure-html/unnamed-chunk-89-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -3886,30 +3883,30 @@ Up             1805</code></pre>
 <h3 class="anchored" data-anchor-id="visualizing-results-with-violin-and-box-plots">Visualizing results with violin and box plots</h3>
 <p>Last, we can visualize the results by looking at the <strong>distribution of counts</strong> aggregated across conditions. We can plot the counts specifically for genes up-regulated in tumor compared to normal condition and use a violin plot together with a box plot. The box plot highlights the <strong>interquartile range and the median of the data</strong>, while the volcano also show the <strong>kernel probability density of the data at different values</strong>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract up-regulated genes which correspond to all the dots in the right part of the volcano</span></span>
-<span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a>tumor_up_genes <span class="ot">&lt;-</span> volcano_corr[volcano_corr<span class="sc">$</span>threshold <span class="sc">==</span> <span class="st">"A"</span>,] <span class="sc">%&gt;%</span> <span class="fu">pull</span>(GeneID)</span>
-<span id="cb101-3"><a href="#cb101-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb101-4"><a href="#cb101-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract normalized and log-scaled counts for up-regulated genes</span></span>
-<span id="cb101-5"><a href="#cb101-5" aria-hidden="true" tabindex="-1"></a>up_mtx <span class="ot">&lt;-</span> <span class="fu">cpm</span>(dds, <span class="at">log=</span><span class="cn">TRUE</span>, <span class="at">normalized.lib.sizes =</span> <span class="cn">TRUE</span>)[tumor_up_genes,]</span>
-<span id="cb101-6"><a href="#cb101-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb101-7"><a href="#cb101-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge information about samples with the counts in order to group counts based on the condition of interest</span></span>
-<span id="cb101-8"><a href="#cb101-8" aria-hidden="true" tabindex="-1"></a>merged_long_up_mtx <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(<span class="fu">as.data.frame</span>(up_mtx), <span class="at">cols =</span> <span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">'id'</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb101-9"><a href="#cb101-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">merge</span>(sampleinfo, <span class="at">by.x =</span> <span class="st">'id'</span>, <span class="at">by.y =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb101-10"><a href="#cb101-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">group=</span><span class="fu">factor</span>(group, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"CRC_N"</span>,<span class="st">"CRC_K"</span>,<span class="st">"CRC_org"</span>)))</span>
-<span id="cb101-11"><a href="#cb101-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb101-12"><a href="#cb101-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Make the plot with ggplot2</span></span>
-<span id="cb101-13"><a href="#cb101-13" aria-hidden="true" tabindex="-1"></a>violins <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(merged_long_up_mtx, <span class="fu">aes</span>(group, value, <span class="at">fill =</span> group)) <span class="sc">+</span> </span>
-<span id="cb101-14"><a href="#cb101-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">trim=</span><span class="cn">FALSE</span>, <span class="at">alpha=</span><span class="fl">0.7</span>) <span class="sc">+</span> </span>
-<span id="cb101-15"><a href="#cb101-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill=</span><span class="st">'white'</span>, <span class="at">width=</span><span class="fl">0.1</span>) <span class="sc">+</span> </span>
-<span id="cb101-16"><a href="#cb101-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">'darkgreen'</span>,<span class="st">'purple'</span>,<span class="st">'magenta'</span>)) <span class="sc">+</span></span>
-<span id="cb101-17"><a href="#cb101-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span> </span>
-<span id="cb101-18"><a href="#cb101-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">'log CPM'</span>)</span>
-<span id="cb101-19"><a href="#cb101-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb101-20"><a href="#cb101-20" aria-hidden="true" tabindex="-1"></a>violins</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract up-regulated genes which correspond to all the dots in the right part of the volcano</span></span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a>tumor_up_genes <span class="ot">&lt;-</span> volcano_corr[volcano_corr<span class="sc">$</span>threshold <span class="sc">==</span> <span class="st">"A"</span>,] <span class="sc">%&gt;%</span> <span class="fu">pull</span>(GeneID)</span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract normalized and log-scaled counts for up-regulated genes</span></span>
+<span id="cb100-5"><a href="#cb100-5" aria-hidden="true" tabindex="-1"></a>up_mtx <span class="ot">&lt;-</span> <span class="fu">cpm</span>(dds, <span class="at">log=</span><span class="cn">TRUE</span>, <span class="at">normalized.lib.sizes =</span> <span class="cn">TRUE</span>)[tumor_up_genes,]</span>
+<span id="cb100-6"><a href="#cb100-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb100-7"><a href="#cb100-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge information about samples with the counts in order to group counts based on the condition of interest</span></span>
+<span id="cb100-8"><a href="#cb100-8" aria-hidden="true" tabindex="-1"></a>merged_long_up_mtx <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(<span class="fu">as.data.frame</span>(up_mtx), <span class="at">cols =</span> <span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">'id'</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb100-9"><a href="#cb100-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">merge</span>(sampleinfo, <span class="at">by.x =</span> <span class="st">'id'</span>, <span class="at">by.y =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb100-10"><a href="#cb100-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">group=</span><span class="fu">factor</span>(group, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"CRC_N"</span>,<span class="st">"CRC_K"</span>,<span class="st">"CRC_org"</span>)))</span>
+<span id="cb100-11"><a href="#cb100-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb100-12"><a href="#cb100-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Make the plot with ggplot2</span></span>
+<span id="cb100-13"><a href="#cb100-13" aria-hidden="true" tabindex="-1"></a>violins <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(merged_long_up_mtx, <span class="fu">aes</span>(group, value, <span class="at">fill =</span> group)) <span class="sc">+</span> </span>
+<span id="cb100-14"><a href="#cb100-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">trim=</span><span class="cn">FALSE</span>, <span class="at">alpha=</span><span class="fl">0.7</span>) <span class="sc">+</span> </span>
+<span id="cb100-15"><a href="#cb100-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill=</span><span class="st">'white'</span>, <span class="at">width=</span><span class="fl">0.1</span>) <span class="sc">+</span> </span>
+<span id="cb100-16"><a href="#cb100-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">'darkgreen'</span>,<span class="st">'purple'</span>,<span class="st">'magenta'</span>)) <span class="sc">+</span></span>
+<span id="cb100-17"><a href="#cb100-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span> </span>
+<span id="cb100-18"><a href="#cb100-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">'log CPM'</span>)</span>
+<span id="cb100-19"><a href="#cb100-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb100-20"><a href="#cb100-20" aria-hidden="true" tabindex="-1"></a>violins</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Part1_files/figure-html/unnamed-chunk-87-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="Part1_files/figure-html/unnamed-chunk-90-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -3919,32 +3916,32 @@ Up             1805</code></pre>
 <h3 class="anchored" data-anchor-id="plot-the-expression-of-single-genes">Plot the expression of single genes</h3>
 <p>To make more informative comparisons we can plot the expression values of single genes across the groups/conditions of interest. IN the graph each dot is a sample, colored by the group it belongs to.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select a set of genes to plot</span></span>
-<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>gnames_to_plot <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"PALD1"</span>, </span>
-<span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"PHLDA1"</span>, </span>
-<span id="cb102-4"><a href="#cb102-4" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"BEST4"</span>, </span>
-<span id="cb102-5"><a href="#cb102-5" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"SPP1"</span>,</span>
-<span id="cb102-6"><a href="#cb102-6" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"MMP7"</span>,</span>
-<span id="cb102-7"><a href="#cb102-7" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"EPCAM"</span></span>
-<span id="cb102-8"><a href="#cb102-8" aria-hidden="true" tabindex="-1"></a>                    ) </span>
-<span id="cb102-9"><a href="#cb102-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb102-10"><a href="#cb102-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot as a grouped boxplot with jittering</span></span>
-<span id="cb102-11"><a href="#cb102-11" aria-hidden="true" tabindex="-1"></a>pldf <span class="ot">&lt;-</span> log2dds[gnames_to_plot,] <span class="sc">%&gt;%</span> <span class="fu">t</span>() <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>() </span>
-<span id="cb102-12"><a href="#cb102-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb102-13"><a href="#cb102-13" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(pldf) <span class="ot">&lt;-</span> gnames_to_plot</span>
-<span id="cb102-14"><a href="#cb102-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb102-15"><a href="#cb102-15" aria-hidden="true" tabindex="-1"></a>pldf <span class="sc">%&gt;%</span> <span class="fu">merge</span>(sampleinfo, <span class="at">by=</span><span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb102-16"><a href="#cb102-16" aria-hidden="true" tabindex="-1"></a>            reshape2<span class="sc">::</span><span class="fu">melt</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb102-17"><a href="#cb102-17" aria-hidden="true" tabindex="-1"></a>            <span class="fu">ggplot</span>(., <span class="fu">aes</span>(<span class="at">x=</span>group, <span class="at">y=</span>value)) <span class="sc">+</span> </span>
-<span id="cb102-18"><a href="#cb102-18" aria-hidden="true" tabindex="-1"></a>            <span class="fu">geom_boxplot</span>(<span class="at">fill=</span><span class="st">"lightgray"</span>) <span class="sc">+</span> </span>
-<span id="cb102-19"><a href="#cb102-19" aria-hidden="true" tabindex="-1"></a>            <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">color=</span>group), <span class="at">size=</span><span class="dv">3</span>, <span class="at">alpha=</span><span class="fl">0.7</span>) <span class="sc">+</span></span>
-<span id="cb102-20"><a href="#cb102-20" aria-hidden="true" tabindex="-1"></a>            <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">'RdYlBu'</span>) <span class="sc">+</span> </span>
-<span id="cb102-21"><a href="#cb102-21" aria-hidden="true" tabindex="-1"></a>            <span class="fu">facet_wrap</span>(<span class="sc">~</span>variable) <span class="sc">+</span> </span>
-<span id="cb102-22"><a href="#cb102-22" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select a set of genes to plot</span></span>
+<span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a>gnames_to_plot <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"PALD1"</span>, </span>
+<span id="cb101-3"><a href="#cb101-3" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"PHLDA1"</span>, </span>
+<span id="cb101-4"><a href="#cb101-4" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"BEST4"</span>, </span>
+<span id="cb101-5"><a href="#cb101-5" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"SPP1"</span>,</span>
+<span id="cb101-6"><a href="#cb101-6" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"MMP7"</span>,</span>
+<span id="cb101-7"><a href="#cb101-7" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"EPCAM"</span></span>
+<span id="cb101-8"><a href="#cb101-8" aria-hidden="true" tabindex="-1"></a>                    ) </span>
+<span id="cb101-9"><a href="#cb101-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb101-10"><a href="#cb101-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot as a grouped boxplot with jittering</span></span>
+<span id="cb101-11"><a href="#cb101-11" aria-hidden="true" tabindex="-1"></a>pldf <span class="ot">&lt;-</span> log2dds[gnames_to_plot,] <span class="sc">%&gt;%</span> <span class="fu">t</span>() <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>() </span>
+<span id="cb101-12"><a href="#cb101-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb101-13"><a href="#cb101-13" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(pldf) <span class="ot">&lt;-</span> gnames_to_plot</span>
+<span id="cb101-14"><a href="#cb101-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb101-15"><a href="#cb101-15" aria-hidden="true" tabindex="-1"></a>pldf <span class="sc">%&gt;%</span> <span class="fu">merge</span>(sampleinfo, <span class="at">by=</span><span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb101-16"><a href="#cb101-16" aria-hidden="true" tabindex="-1"></a>            reshape2<span class="sc">::</span><span class="fu">melt</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb101-17"><a href="#cb101-17" aria-hidden="true" tabindex="-1"></a>            <span class="fu">ggplot</span>(., <span class="fu">aes</span>(<span class="at">x=</span>group, <span class="at">y=</span>value)) <span class="sc">+</span> </span>
+<span id="cb101-18"><a href="#cb101-18" aria-hidden="true" tabindex="-1"></a>            <span class="fu">geom_boxplot</span>(<span class="at">fill=</span><span class="st">"lightgray"</span>) <span class="sc">+</span> </span>
+<span id="cb101-19"><a href="#cb101-19" aria-hidden="true" tabindex="-1"></a>            <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">color=</span>group), <span class="at">size=</span><span class="dv">3</span>, <span class="at">alpha=</span><span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb101-20"><a href="#cb101-20" aria-hidden="true" tabindex="-1"></a>            <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">'RdYlBu'</span>) <span class="sc">+</span> </span>
+<span id="cb101-21"><a href="#cb101-21" aria-hidden="true" tabindex="-1"></a>            <span class="fu">facet_wrap</span>(<span class="sc">~</span>variable) <span class="sc">+</span> </span>
+<span id="cb101-22"><a href="#cb101-22" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Part1_files/figure-html/unnamed-chunk-88-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="Part1_files/figure-html/unnamed-chunk-91-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -3955,11 +3952,11 @@ Up             1805</code></pre>
 <h2 class="anchored" data-anchor-id="save-dds-object">Save dds object</h2>
 <p>Let us save the object in case we need to retrieve it later on.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the environment</span></span>
-<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a><span class="fu">getwd</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the environment</span></span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a><span class="fu">getwd</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(dds, <span class="st">'../results/dds_object.rds'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(dds, <span class="st">'../results/dds_object.rds'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

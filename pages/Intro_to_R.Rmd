@@ -594,11 +594,11 @@ Load (read) and Save (write) files
 
 ```{r}
 # Save the dataframe we genertaed above
-write.table(dataf, "dataf.csv", sep = ",", quote = FALSE)
+write.table(dataf, "../results/dataf.csv", sep = ",", quote = FALSE)
 ```
 
 ```{r}
-dataf <- read.table("dataf.csv", sep = ",")
+dataf <- read.table("../results/dataf.csv", sep = ",")
 ```
 
 

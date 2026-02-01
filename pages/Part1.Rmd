@@ -389,11 +389,14 @@ As you can see from the table, with respect to the other methods, these ones can
 **Highly expressed genes consume more sequencing resources** and thereby **suppress the representation of other genes**.
 Scaling by library size fails to correct for this as composition biases can still occur in libraries of the same size.
 
-In the example below, the majority of counts for sample A is related to the differentially expressed gene and therefore this might cause other genes in that sample to be normalized by this high number of counts, resulting in them appearing to be expressed at a lower level as opposed to the same genes in sample B.
+Form edgeR: 
+*RNA-seq measure relative expression rather than absolute expression. This becomes important for differential expression analyses when a small number of genes are very highly expressed in some samples but not in others. If a small proportion of highly expressed genes consume a substantial proportion of the total library size for a particular sample, this will cause the remaining genes to be under-sampled for that sample. Unless this effect is adjusted for, the remaining genes may falsely appear to be down-regulated in that sample.*
+
+In the example below, the majority of counts for sample A is related to one highly expressed gene and therefore this might cause other genes in that sample to be normalized by this high number of counts, resulting in them appearing to be expressed at a lower level as opposed to the same genes in sample B.
 
 <center><img src="https://hbctraining.github.io/DGE_workshop/img/normalization_methods_composition.png" width="500"/></center>
 
-Out of all these, we will use one of the more advanced ones provided in the `edgeR` package which will be now introduced.
+Here, we will use one of the most robust normalization methods provided in the `edgeR` package which is introduced below.
 
 ## About the `edgeR` Package
 
@@ -469,7 +472,23 @@ In case your dataset has a source of variability due to **batch effect** or othe
 
 </center>
 
-For instance, if you found that in your dataset part of the variability is due to the different patients from which the biological replicates come from, but you want to assess other biologically driven differences due to a certain treatment, you could modify your design formula in order to **check differences due to the treatment, while controlling simultaneously for patient-to-patient variability**.
+For instance, if you found that in your dataset part of the variability is due to the different patients from which the biological replicates come from, but you want to assess other biologically driven differences due to a certain treatment, you could modify your design formula in order to **check differences due to the treatment, while controlling simultaneously for patient-to-patient variability**. In other words, to find genes that are differentially expressed in tumors compared to normal tissues, adjusting for baseline differences between the patients.
+
+```{r, eval=FALSE, include=FALSE}
+
+# We are not interested in difference between the patients but in the differences between tissues
+# The design will estimate the patient effect
+# The treatment, tumor effect is adjusted for differences between patients (or batches) by using an additive model formula.
+#... so we need the columns to estimate the effect of each patient.
+
+# From edgeR vignette: 
+# Paired samples are a simple example of what is called ŞblockingŤ in experimental design. The
+# idea of blocking is to compare treatments using experimental subjects that are as similar as
+# possible, so that the treatment difference stands out as clearly as possible.
+
+
+```
+
 
 > In this case, the design formula would be something similar to:
 
@@ -636,6 +655,28 @@ In addition, many downstream analyses (like PCA, clustering, distance calculatio
 If we do not stabilize for the mean-variance relationship, these analyses will be dominated by highly expressed genes — even if those genes might not be biologically interesting.
 Low and moderately expressed genes (which might carry the biological signal) are ignored, because they contribute much less to the variance or distances.
 
+
+
+```{r, eval=FALSE, include=FALSE}
+
+# The set of all normalization factors for a DGEList multiply to unity, ensuring that the geomet-
+# ric mean of the effective library sizes is the same as the geometric mean of the original library
+# sizes. A normalization factor below one indicates that a small number of high count genes
+# are monopolizing the sequencing, causing the counts for other genes to be lower than would
+# be usual given the library size. As a result, the library size will be scaled down, analogous
+# to scaling the counts upwards in that library. Conversely, a factor above one scales up the
+# library size, analogous to downscaling the counts.
+
+product <- function(vec){
+    out <- 1
+    for(i in 1:length(vec)){
+         out <- out*vec[i]
+    }
+    out
+}
+
+product(dds$samples$norm.factors)
+```
 
 
 ```{r, eval=FALSE, include=FALSE}
@@ -900,6 +941,8 @@ pheatmap(log2dds[select,], cluster_rows=TRUE, show_rownames=FALSE,
 
 ```
 
+
+
 #### Perform hierarchical clustering using the top variable genes
 
 ```{r, fig.height=5, fig.width=7}
@@ -921,6 +964,23 @@ pheatmap(log2dds[select,], cluster_rows=TRUE, show_rownames=FALSE,
 
 
 > 🤔 Apart from using different set of genes, can you spot what is different about the two plots?
+
+```{r, eval=FALSE, include=FALSE}
+
+# Compute z-score by row (every gene gets mean=0 and sd=1) 
+zscore <- t(apply(log2dds, 1, function(x) (x - mean(x))/sd(x) ) )
+
+zscore <- t(scale(t(log2dds)))
+
+zscore %>% head(2)
+
+# Mean should 0, sd should be 1
+apply(zscore, 1, mean ) %>% head(10)
+
+# Max and min values are not the same
+apply(zscore, 1, min ) %>% head(10)
+
+```
 
 
 ### Sample-to-sample Distances
@@ -1327,8 +1387,7 @@ Add on the volcano plot the names of the most interesting genes
 
 ```{r}
 
-# Select the top differentially expressed genes
-
+# Select genes with greatest changes in expression (log2 fold-change)
 names_list <- volcano_corr %>%
             filter(abs(logFC)>2 & FDR<0.01) %>%
             arrange(desc(abs(logFC))) %>%
@@ -1336,7 +1395,8 @@ names_list <- volcano_corr %>%
             pull(GeneID)
 length(names_list)
 
-# Select genes with greatest changes in expression (log2 fold-change)
+
+# Select the top differentially expressed genes
 neg_fc <- res %>% filter(logFC < -2 & FDR < 0.01) %>% arrange(FDR) %>% head(6) %>% pull(GeneID)
 
 pos_fc <- res %>% filter(logFC > 2 & FDR < 0.01) %>% arrange(FDR) %>% head(6) %>% pull(GeneID)
@@ -1371,14 +1431,9 @@ volc_plot <- ggplot(volcano_corr, aes(x=logFC, y =-log10(FDR), color=threshold))
   geom_vline(xintercept = -1, colour="#990000", linetype="dashed") +
   scale_y_continuous(trans = "log1p") +
   geom_label_repel(data=volcano_corr[which(volcano_corr$names=='mark' & volcano_corr$threshold=='A'),], aes(label=GeneID), max.overlaps = 30, color='black', size=4, fill='white', fontface='italic') +
-    geom_label_repel(data=volcano_corr[which(volcano_corr$names=='mark' & volcano_corr$threshold=='B'),], aes(label=GeneID), max.overlaps = 30, color='black', size=4, fill='white', fontface='italic')
+  geom_label_repel(data=volcano_corr[which(volcano_corr$names=='mark' & volcano_corr$threshold=='B'),], aes(label=GeneID), max.overlaps = 30, color='black', size=4, fill='white', fontface='italic')
 
 volc_plot
-          
-  # mutate(., stroke = ifelse(.$GeneID %in% names_list & volcano_corr$FDR < padj_val & volcano_corr$logFC > log2FC_val, 2, 0), 
-  #                                              names=ifelse(.$GeneID %in% names_list,'mark','leave')) %>%
-  #                                                   .[order(.$names),]
-
 
 ```
 

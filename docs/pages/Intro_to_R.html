@@ -773,17 +773,16 @@ $metadata
 <div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect files in the currect directory</span></span>
 <span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">list.files</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre class="bordered"><code>[1] 14</code></pre>
+<pre class="bordered"><code>[1] 12</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre class="bordered"><code> [1] "dataf.csv"               "df.csv"                 
- [3] "index.html"              "index.Rmd"              
- [5] "Intro_to_R.rmarkdown"    "Intro_to_R.Rmd"         
- [7] "Part1_files"             "Part1.html"             
- [9] "Part1.Rmd"               "Part2_files"            
-[11] "Part2.html"              "Part2.Rmd"              
-[13] "RNA-seq_principles.html" "RNA-seq_principles.Rmd" </code></pre>
+<pre class="bordered"><code> [1] "index.html"              "index.Rmd"              
+ [3] "Intro_to_R.rmarkdown"    "Intro_to_R.Rmd"         
+ [5] "Part1_files"             "Part1.html"             
+ [7] "Part1.Rmd"               "Part2_files"            
+ [9] "Part2.html"              "Part2.Rmd"              
+[11] "RNA-seq_principles.html" "RNA-seq_principles.Rmd" </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co">#dir()</span></span>
 <span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -801,10 +800,10 @@ $metadata
 <p>Load (read) and Save (write) files</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the dataframe we genertaed above</span></span>
-<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(dataf, <span class="st">"dataf.csv"</span>, <span class="at">sep =</span> <span class="st">","</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(dataf, <span class="st">"../results/dataf.csv"</span>, <span class="at">sep =</span> <span class="st">","</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>dataf <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"dataf.csv"</span>, <span class="at">sep =</span> <span class="st">","</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>dataf <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"../results/dataf.csv"</span>, <span class="at">sep =</span> <span class="st">","</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="object-attributes" class="level3">
 <h3 class="anchored" data-anchor-id="object-attributes">Object Attributes</h3>
