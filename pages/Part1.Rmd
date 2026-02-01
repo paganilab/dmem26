@@ -11,7 +11,6 @@ editor_options:
     wrap: sentence
 code-block-border-left: true
 date: 'Compiled: `r format(Sys.Date(), "%B %d, %Y")`'
-
 ---
 
 ## Objectives
@@ -23,72 +22,29 @@ date: 'Compiled: `r format(Sys.Date(), "%B %d, %Y")`'
 -   Differential analysis
 -   Visualization of results
 
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(engine = 'R', echo = TRUE, fig.align = 'center', warning = FALSE, message = FALSE, class.output = ".bordered")
-library(kableExtra)
-library(dplyr)
-library(tidyr)
-library(edgeR)
-library(ggplot2)
-library(tibble)
-```
-
-
 ## Install the packages
 
-The analyses we are going to perform require specific *functions* that are not included in the basic set of functions in R. These functions are collected in specific *packages*. R packages are extensions to the R programming language that contain code, data and documentation which help us performing standardized workflows. In the chunk below, we instruct R to install the packages that we will need later on through the workshop.
+If you haven't already installed the packages as part of the `Intro_to_R` tutorial, run the following chunks.
 
-> We have already installed the necessary packages. However, if a library is not present copy the relevant command line and paste it to your R script.
+```{r, eval=FALSE}
 
-> Comment/Uncomment: SHIFT + CMD + C
-
-```{r, eval=FALSE }
-
-# # Install packages from Bioconductor
-# if (!require("BiocManager", quietly = TRUE))
-#   install.packages("BiocManager")
-# 
-# Install packages from CRAN
-# install.packages("tidyr")
-# install.packages("dplyr")
-# install.packages("googledrive")
-# install.packages("kableExtra", type="binary")
-# 
-# # For differential analysis
-# BiocManager::install("vsn")
-# BiocManager::install("edgeR")
-# install.packages("statmod")
-# 
-# # For visualizations
-# install.packages("hexbin")
-# install.packages("pheatmap")
-# install.packages("gprofiler2")
-# #install.packages("RColorBrewer")
-# #install.packages("ggrepel")
-# #install.packages("circlize")
-# 
-# # For downstream analysis
-# BiocManager::install("fgsea", type="binary")
-# BiocManager::install("GEOquery")
-# 
-# # Clean garbage
-# gc()
+install.packages("rmarkdown")
+install.packages("knitr")
+install.packages("BiocManager")
 
 ```
-
 
 During installation of packages, you will see many messages being displayed on your R console, you usually need to pay attention to them if they are **red and specify an error**!
 
 If you encounter any of the messages below during installation, follow this procedure here:
 
 ```{r, eval=FALSE}
-# R asks for package updates, answer "n" and type enter
+# R asks for package updates, answer "a" and type enter
 # Question displayed:
 Update all/some/none? [a/s/n]:
 
 # Answer to type:  
-n
+a
 
 # R asks for installation from binary source, answer "no" and type enter
 # Question displayed:
@@ -98,6 +54,68 @@ Do you want to install from sources the packages which need compilation? (Yes/no
 no
 ```
 
+```{r, eval=FALSE}
+
+#Install packages from CRAN
+install.packages("tidyr")
+install.packages("dplyr")
+install.packages("kableExtra")
+
+# For differential analysis
+BiocManager::install("vsn")
+BiocManager::install("edgeR")
+install.packages("statmod")
+install.packages("matrixStats")
+
+# For visualizations
+install.packages("hexbin")
+#install.packages("ggplot2")
+install.packages("pheatmap")
+install.packages("RColorBrewer")
+install.packages("ggrepel")
+
+# For downstream analysis
+BiocManager::install("fgsea")
+install.packages("msigdbr")
+install.packages("gprofiler2")
+install.packages("reshape2")
+#BiocManager::install("clusterProfiler")
+
+# Clean garbage
+gc()
+
+```
+
+## Load libraries
+
+```{r, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(engine = 'R', echo = TRUE, fig.align = 'center', warning = FALSE, message = FALSE, class.output = ".bordered")
+```
+
+```{r}
+library(knitr)
+library(kableExtra)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(tibble)
+library(reshape2)
+```
+
+## Useful commands
+
+Some useful shortcuts to commands we saw in the Intro_to_R
+
+> Run a chunk: `Alt` + `CMD` + `Enter` or just `CMD` + `Enter` for a selected line
+
+> Create new chunk in macOS: `Alt` + `CMD` + `I`
+
+> Create new chunk in Windows: `Alt` + `Ctrl` + `I`
+
+> Comment/Uncomment code: `SHIFT` + `CMD` + `C`
+
+***
 
 ## The RNA-seq dataset
 
@@ -105,50 +123,44 @@ The dataset we will analyze comes from this paper published from our lab in 2021
 
 > Della Chiara, Gervasoni, Fakiola, Godano et al., 2021 - Epigenomic landscape of human colorectal cancer unveils an aberrant core of pan-cancer enhancers orchestrated by YAP/TAZ
 
-
 <center>
-
-<img src="../pics/NatComm_paper.png" width="400"/>
-
-
+<img src="../pics/NatComm_paper.png" width="500"/>
 </center>
 
 
-The main research question of the study was the existence of a common layer of epigenetic deregulation 
-across diverse human malignancies. To address this, we leveraged the organoid technology and generated **organoid lines from patients to model colorectal tumors**. Using RNA-seq, we **profiled the transcriptome of patient-derived organoids (PDOs)** to show that they closely recapitulate the  molecular features of their original CRC. We also performed a transcriptomic classification of the primary tumor tissues in order to select a library of PDOs that represents interpatient heterogeneity, i.e. encompasses the different molecular subtypes of CRC. This is because we were interested to identify epigenomic mechanisms of disease that were common to all CRC tumors as opposed to those that are relevant to a specific molecular subtype.
+***
+
+The main research question of the study was the existence of a common layer of epigenetic deregulation across diverse human malignancies.
+To address this, we leveraged the organoid technology and generated **organoid lines from patients to model colorectal tumors**.
+Using RNA-seq, we **profiled the transcriptome of patient-derived organoids (PDOs)** to show that they closely recapitulate the molecular features of their original CRC.
+We also performed a transcriptomic classification of the primary tumor tissues in order to select a library of PDOs that represents interpatient heterogeneity, i.e. encompasses the different molecular subtypes of CRC.
+This is because we were interested to identify epigenomic mechanisms of disease that were common to all CRC tumors as opposed to those that are relevant to a specific molecular subtype.
 
 ![](../pics/graphical_abstract_rnaseq_1.png)
 
-
-
 ![](../pics/graphical_abstract_rnaseq_2.png)
 
+To further explore the way cancer cells use enhancers as opposed to nonmalignant cells, we performed systematic **ChIP-seq on histone marks** and compared it to the ATAC-seq-derived chromatin activity data of multiple other malignancies.
+We found a small number of **enhancer sequences were conserved** across all these types, and identified a transcription factor that linked them - the YAP/TAZ pair - that when perturbed would cause the death of malignant, but not normal, organoids, therefore representing a potential pan-cancer therapeutic target.
 
-
-To further explore the way cancer cells use enhancers as opposed to nonmalignant cells, we performed systematic **ChIP-seq on histone marks** and compared it to the ATAC-seq-derived chromatin activity data of multiple other malignancies. We found a small number of **enhancer sequences were conserved** across all these types, and identified a transcription factor that linked them - the YAP/TAZ pair - that when perturbed would cause the death of malignant, but not normal, organoids, therefore representing a potential pan-cancer therapeutic target.
-
-
-> ✅ In this Tutorial we will analyse  RNA-seq data generated for normal colon tissues, primary tumors, and patient-derived organoids (PDOs) from tumors. One of the main goals of the analysis performed in the paper was to show that the transcriptomic landscape of PDOs resembles that of the primary tumors.
-
-
-
+> ✅ In this Tutorial we will analyse RNA-seq data generated for normal colon tissues, primary tumors, and patient-derived organoids (PDOs) from tumors.
+> One of the main goals of the analysis performed in the paper was to show that the transcriptomic landscape of PDOs resembles that of the primary tumors.
 
 ## Load and explore the dataset
 
-In order to speed up the computations and keep memory usage low, we have **subset the dataset only to chromosome 12**. It will be interesting to see if we can recapitulate similar analyses by looking only at a single chromosome 🤓.
-
-
-Data are in this public Google Drive [folder](https://drive.google.com/drive/folders/1Q4seP47Q0KMtOjHhbdZohp53yx0_p6cT?usp=sharing). You will find:
+You can download the data you will need to run this tutorial from the following public Google Drive [folder](https://drive.google.com/drive/folders/1Q4seP47Q0KMtOjHhbdZohp53yx0_p6cT?usp=sharing).
+You will find:
 
 1.  `sampleinfo.rds`: a tabular file containing **metadata** related to columns of the count table, which contains different info about our samples (e.g. the sample origin, the patient etc.).
-2.  `rsem.merged.gene_counts.tsv``: the **gene expression or counts matrix** containing the number of reads detected for each gene in each sample.
-3.  `genome_genes.gtf`: a GTF file with gene annotations across all chromosomes.
+2.  \`rsem.merged.gene_counts.tsv\`\`: the **gene expression or counts matrix** containing the number of reads detected for each gene in each sample.
+3.  `gene_annotation.rds`: a GTF file with gene annotations across all chromosomes.
 
+Open the Google Drive link above on the browser, check the presence of the files and download them on your computer.
+Create a new directory within your Project Directory `Cloud/project/course_material` to store the data.
 
-Open the Google Drive link above on the browser, check the presence of the files and download them on your computer. Create a new directory within C:\\Users\\student\ to store the data.
-
-
-Create a new R notebook and save it in the same folder. Check the path to the current working directory and the list of files you have just downloaded. Modify the code below according to the directory where you downloaded the data.
+Create a new R notebook and save it in a separate folder.
+Check the path to the current working directory.
+To list the files you have just downloaded, modify the code below according to the directory where you downloaded the data.
 
 ```{r, eval=FALSE}
 getwd()
@@ -156,10 +168,9 @@ list.files("./")
 #dir()
 ```
 
-
 ### Load Samples
 
-```{r, eval=FALSE, include=TRUE}
+```{r, eval=FALSE, include=FALSE}
 #setwd("/storage/data/MAP/projects/organoids/bulk_rna-seq/analysis/DEA/")
 
 # Read sampleifo
@@ -196,7 +207,7 @@ dim(sampleinfo)
 head(sampleinfo,4) %>% kbl() %>% kable_styling()
 
 # Tabulate information
-table(sampleinfo$condition, sampleinfo$group) %>% kbl %>% kable_styling()
+sampleinfo %>%  group_by(condition, group) %>% tally() %>% kbl %>% kable_styling()
 table(sampleinfo$condition, sampleinfo$patient) %>% kbl %>% kable_styling()
 ```
 
@@ -206,15 +217,12 @@ summary(sampleinfo) %>% kbl %>% kable_styling()
 
 ```
 
-
 ### Load gene annotation
 
-```{r}
+```{r, eval=FALSE, include=FALSE}
+
 igenomes=read.table("../course_material/genome_genes.gtf", sep="\t")
-```
 
-
-```{r}
 igenomes$V9=as.character(igenomes$V9)
 igenomes$gene_id <- gsub("gene_id ", "", sapply(strsplit(igenomes$V9, "; "), function(x) x[1]))
 igenomes$gene_name=gsub("gene_name ", "", sapply(strsplit(igenomes$V9, "; "), function(x) x[2]))
@@ -227,16 +235,12 @@ dim(igenomes)
 head(igenomes,2) %>% kbl() %>% kable_styling()
 ```
 
-```{r}
+```{r, eval=FALSE, include=FALSE}
 igenomes %>% saveRDS(., '../course_material/gene_annotation.rds')
 ```
 
-
-
-```{r, eval=FALSE, include=FALSE}
-annotation=igenomes
-identical(annotation$gene_id, annotation$gene_name)
-
+```{r}
+igenomes <- readRDS("../course_material/gene_annotation.rds")
 ```
 
 ### Load RSEM raw sequencing counts
@@ -251,86 +255,97 @@ RSEM_counts[,] <- sapply(RSEM_counts[,], round)
 RSEM_counts %>% write.table(., "../course_material/rsem.merged.gene_counts.tsv", col.names=T, row.names = T, quote=F, sep="\t")
 ```
 
-
 ```{r}
-RSEM_counts<-read.table("../course_material/rsem.merged.gene_counts.tsv", header = T)
+RSEM_counts <- read.table("../course_material/rsem.merged.gene_counts.tsv", header = T)
 dim(RSEM_counts)
 head(RSEM_counts, 4) %>% kbl() %>% kable_styling()
 ```
 
 Remove genes on chrY, mitochondrial genome and unknown or unresolved genomic regions
+
 ```{r}
 # Select chromosomes to remove from annotation
-chrom2remove=droplevels(igenomes[(grep("_|chrY|chrM", igenomes$chromosome)), ])
+chrom2remove <- droplevels(igenomes[(grep("_|chrY|chrM", igenomes$chromosome)), ])
 dim(chrom2remove)
 table(chrom2remove$chromosome)
 ```
 
 
-```{r}
+```{r, include=TRUE}
 # Remove them from the RSEM dataset
-RSEM_counts <- RSEM_counts[!rownames(RSEM_counts)%in%chrom2remove$gene_id,]
-table(rownames(RSEM_counts) %in% igenomes$gene_name) %>% kbl(digits = 6) %>% kable_styling()
+RSEM_counts <- RSEM_counts %>% 
+  filter(!rownames(.)%in%chrom2remove$gene_id)
+
+#RSEM_counts <- RSEM_counts[!rownames(RSEM_counts)%in%chrom2remove$gene_id,]
+
+dim(RSEM_counts)
 
 ```
 
+Check that the samples in sampleinfo are present in RSEM Is the opposite true?
 
-Check that the samples in sampleinfo are present in RSEM
-Is the opposite true?
 ```{r}
 samples_rsem <- (unique(names(RSEM_counts)))
 
 table(sampleinfo$sample%in%samples_rsem)
 table(samples_rsem%in%sampleinfo$sample)
 ```
+
 Subset the RSEM dataset to retain counts only for the samples present in the sampleinfo dataset.
 
 ```{r}
-RSEM_counts_sub <- RSEM_counts[,colnames(RSEM_counts)%in%sampleinfo$sample]
+
+RSEM_counts_sub <- RSEM_counts %>%
+  select(all_of(rownames(sampleinfo)))
+
+#RSEM_counts_sub <- RSEM_counts[,colnames(RSEM_counts)%in%sampleinfo$sample]
 
 dim(RSEM_counts_sub)
 head(RSEM_counts_sub,2) %>% kbl() %>% kable_styling()
+
 ```
-
-
 
 ## Saving/Loading Files
 
-**Let's save this object with samples information** in a file format where columns are separated by commas. You might be familiar with this format if you have worked quite a bit in Excel. In `R`, we can save tabular data with the `write.table()` function specifying the location (the file name) we want. This is **useful in the case our `R` session dies or we decide to interrupt it**. In this case we will not have to run the whole analysis from the beginning and we can just source the file and load it!
+**Let's save this object with samples information** in a file format where columns are separated by commas.
+You might be familiar with this format if you have worked quite a bit in Excel.
+In `R`, we can save tabular data with the `write.table()` function specifying the location (the file name) we want.
+This is **useful in the case our `R` session dies or we decide to interrupt it**.
+In this case we will not have to run the whole analysis from the beginning and we can just source the file and load it!
 
-```{r, eval=FALSE}
-write.table(sampleinfo, "../results/samples_table.csv", sep = ",", quote = FALSE)
+```{r}
+write.table(sampleinfo, "../course_material/samples_table.csv", sep = ",", quote = FALSE)
 ```
-
 
 We can **load the object back into the current session** by using the following code line:
 
-```{r, eval=FALSE}
-sampleinfo <- read.table("../results/samples_table.csv", sep = ",")
+```{r}
+sampleinfo <- read.table("../course_material/samples_table.csv", sep = ",")
 ```
 
-Repeat the same for the counts. In this case save it as an RDS Object, which takes up less space.
+Repeat the same for the counts.
+>In this case save it as an RDS Object, which is R's binary format. 
+>This format preserves the R object structure, it stores complex objects, it's faster to read/write, and takes up less space. The caveat: it is not human-readable (binary).
 
-```{r, eval=FALSE, include=TRUE}
-saveRDS(RSEM_counts_sub, "../results/counts_table.rds")
+```{r}
+saveRDS(RSEM_counts_sub, "../course_material/counts_table.rds")
 ```
 
-
-```{r, include=TRUE}
+```{r}
 # Load the data again
-RSEM_counts_sub <- readRDS("../results/counts_table.rds")
+RSEM_counts_sub <- readRDS("../course_material/counts_table.rds")
 
 ```
-
-
 
 **! Troubleshoot**
 
->Where are you? Where is the file located? Check the current directory and navigate through the folders with `getwd()` and `list.files("./")` or `dir()` 
+> Where are you?
+> Where is the file located?
+> Check the current directory and navigate through the folders with `getwd()` and `list.files("./")` or `dir()`
 
+***
 
-
-## Data Normalization: removing uninteresting differences 
+## Data Normalization: removing uninteresting differences
 
 To highlight relevant biological differences between groups of samples in our dataset, we first need to take into account and minimize all of the *uninteresting* differences between samples.
 This is accomplished by **normalizing the data**, a mandatory step before any differential analysis, if we want to make counts **comparable both across samples or across different genes**, without any unwanted *bias*.
@@ -341,20 +356,18 @@ The main differences in the dataset that we want to normalize for are:
 
 <center><img src="https://hbctraining.github.io/DGE_workshop/img/normalization_methods_depth.png" width="500"/></center>
 
-
 2.  **Genomic interval length**: this is a potential bias if we want to **compare across group of intervals** other than across samples. Indeed, the larger the genomic region, the higher the amount of reads that will be counted on it, and viceversa.
 
 <center><img src="https://hbctraining.github.io/DGE_workshop/img/normalization_methods_length.png" width="300"/></center>
 
-
 During the years, **many approaches** to data normalization have been developed.
 In the table below, we summarized three common methods that can be employed to account for differences in library size (i.e. the sequencing depth) and the genomic interval length.
 
-| **Normalization Method**      | **Accounted Factors**            | **Description**                                                   |
+| **Normalization Method** | **Accounted Factors** | **Description** |
 |------------------------|------------------------|------------------------|
-| CPM (counts per million)      | Sequencing depth                 | Counts scaled by total read number                                |
-| TPM (transcripts per million) | Sequencing depth and gene length | Counts per length of transcript (kb) per million mapped reads     |
-| FPKM/RPKM                     | Sequencing depth and gene length | Counts per kilobase of exon mapped reads per million mapped reads |
+| CPM (counts per million) | Sequencing depth | Counts scaled by total read number |
+| TPM (transcripts per million) | Sequencing depth and gene length | Counts per length of transcript (kb) per million mapped reads |
+| FPKM/RPKM | Sequencing depth and gene length | Counts per kilobase of exon mapped reads per million mapped reads |
 
 > Notice the term "transcript" for TPM or "exon" in the method descriptions.
 > Historically, these methods have been developed for RNA-seq data, dealing with **gene expression counts**, but they can be extended for other sequencing technologies.
@@ -364,22 +377,21 @@ However, newer and more sophisticated approaches have been developed to take int
 Two of these are the **DESeq2's median of ratios** and the **edgeR's trimmed mean of M values**.
 These are indeed more **advanced statistical methods** used for normalization and differential analysis in multiple sequencing data, including RNA-seq and ATAC-seq.
 
-| **Normalization Method**                                                                                | **Accounted Factors**                             | **Description**                                                      |
+| **Normalization Method** | **Accounted Factors** | **Description** |
 |------------------------|------------------------|------------------------|
-| *DESeq2*'s median of ratios^[1](https://bioconductor.org/packages/release/bioc/html/DESeq2.html)^       | Sequencing depth and RNA composition              | Counts are divided by a sample-specific size factor                  |
+| *DESeq2*'s median of ratios^[1](https://bioconductor.org/packages/release/bioc/html/DESeq2.html)^ | Sequencing depth and RNA composition | Counts are divided by a sample-specific size factor |
 | *edgeR*'s trimmed mean of M values^[2](https://bioconductor.org/packages/release/bioc/html/edgeR.html)^ | Sequencing depth, RNA composition and gene length | Weighted trimmed mean of the log ratio of expression between samples |
 
+As you can see from the table, with respect to the other methods, these ones can correct for one additional unwanted difference across libraries:
 
-As you can see from the table, with respect to the other methods, these ones can correct for one additional unwanted difference across libraries: 
+3.  **Composition Bias**: these refer to differences in the composition of sequences across libraries that can arise due to a few highly differentially expressed genes between samples, differences in the number of genes expressed between samples, or presence of contamination.
 
-3.  **Composition Bias**: these refer to differences in the composition of sequences across libraries that can arise due to a few highly differentially expressed genes between samples, differences in the number of genes expressed between samples, or presence of contamination. 
-
-**Highly expressed genes consume more sequencing resources** and thereby **suppress the representation of other genes**. Scaling by library size fails to correct for this as composition biases can still occur in libraries of the same size.
+**Highly expressed genes consume more sequencing resources** and thereby **suppress the representation of other genes**.
+Scaling by library size fails to correct for this as composition biases can still occur in libraries of the same size.
 
 In the example below, the majority of counts for sample A is related to the differentially expressed gene and therefore this might cause other genes in that sample to be normalized by this high number of counts, resulting in them appearing to be expressed at a lower level as opposed to the same genes in sample B.
 
 <center><img src="https://hbctraining.github.io/DGE_workshop/img/normalization_methods_composition.png" width="500"/></center>
-
 
 Out of all these, we will use one of the more advanced ones provided in the `edgeR` package which will be now introduced.
 
@@ -411,7 +423,6 @@ You can have a look at all the functions contained in the `edgeR` package by typ
 edgeRUsersGuide()
 ```
 
-
 ## Create a DGEList object with counts, sample metadata and design formula
 
 In order for the package to read and understand our data and correctly perform the analysis, we need to **organize our data** in a way that the functions of the package can handle.
@@ -432,14 +443,11 @@ The samples table will look like this, with three replicates for each of the two
 | SA5         | Pt2     | Condition_2 |
 | SA6         | Pt3     | Condition_2 |
 
-
-If we are interested in performing a differential expression analysis comparing `condition_1` versus `condition_2`, then our design formula should specify the `Condition` factor. 
+If we are interested in performing a differential expression analysis comparing `condition_1` versus `condition_2`, then our design formula should specify the `Condition` factor.
 
 > 💡 **What is the column that we are interested in when specifying the design formula using in our `sampleinfo` table?**
 
 > 💡 **What is the factor and levels in our case?**
-
-
 
 ### Paired Analyses and Batch effects
 
@@ -453,7 +461,6 @@ In case your dataset has a source of variability due to **batch effect** or othe
 
 ```
 
-
 <center>
 
 ![](../pics/Batch_effect.png){width="400"}
@@ -461,7 +468,6 @@ In case your dataset has a source of variability due to **batch effect** or othe
 [Source](https://scilifelab.github.io/courses/ngsintro/1905/slides/rnaseq/presentation.html#7)
 
 </center>
-
 
 For instance, if you found that in your dataset part of the variability is due to the different patients from which the biological replicates come from, but you want to assess other biologically driven differences due to a certain treatment, you could modify your design formula in order to **check differences due to the treatment, while controlling simultaneously for patient-to-patient variability**.
 
@@ -474,11 +480,13 @@ For instance, if you found that in your dataset part of the variability is due t
 
 > This design formula works ideally if your dataset is **paired**, that is, there is equal contribution for all the patients to the contrasted condition (i.e., the treatment).
 
+> The optimal setting for the analysis (decided experimentally) is to have paired samples.
+> This might be a somewhat difficult concept to grasp, but for our table above this means that every Patient **contributes equally to the two categories** in the Condition columns that we are interested in.
+> In this setting, we are fully capable of exploiting the statistics behind the tools we use for differential analysis by correcting for the uninteresting differences arising between patients.
+> This aspect greatly helps the analysis and improves the statistical validity of the results.
 
-> The optimal setting for the analysis (decided experimentally) is to have paired samples. This might be a somewhat difficult concept to grasp, but for our table above this means that every Patient **contributes equally to the two categories** in the Condition columns that we are interested in. In this setting, we are fully capable of exploiting the statistics behind the tools we use for differential analysis by correcting for the uninteresting differences arising between patients. This aspect greatly helps the analysis and improves the statistical validity of the results.
-
-> Remember, this is something achieved by deciding the experimental setting **beforehand**! Ideally this should be done through a collaborative effort between bioinformaticians/statisticians and bench scientists!
-
+> Remember, this is something achieved by deciding the experimental setting **beforehand**!
+> Ideally this should be done through a collaborative effort between bioinformaticians/statisticians and bench scientists!
 
 Now that we also understand the design formula, we can create the `DGEList` object with the data that we loaded beforehand, but first we need to check that the columns of the `RSEM_counts_sub` table are in the same order of the rows of the `sampleinfo` table, this is important since **we want to be sure that the right levels of expression are associated to the right sample**.
 
@@ -493,7 +501,6 @@ table(rownames(sampleinfo)==colnames(RSEM_counts_sub))
 all(colnames(RSEM_counts_sub) == rev(rownames(sampleinfo)) )
 
 ```
-
 
 ### DGEList object
 
@@ -525,6 +532,7 @@ dds$design <- design
 design %>% kbl() %>% kable_styling()
 
 ```
+
 Remember that `dds` is just a **list** in R which can be updated with different elements.
 
 We can remove the counts table from our R environment since that information is stored in our DGEList object now.
@@ -548,25 +556,25 @@ head(dds$samples) %>% kbl() %>% kable_styling()
 We can see that some new columns were added to the samples table present in our DGEList object when we created it (the `lib.size` and `norm.factors` columns)!
 These will be used by edgeR later on for data normalization!
 
-
 ```{r, include=FALSE}
 libs1 <- apply(dds$counts, 2, sum)
 class(libs1)
 libs1
 ```
+
 We can also take a look at the table containing the counts, which is just another element of our DGEList object:
 
-
 > 💡 In R, list elements are accessible with the `$` accessor.
-Our dds object is indeed a list made up of three elements, the counts table, the samples table and the design table, these are accessible using `$` like we did above.
-
+> Our dds object is indeed a list made up of three elements, the counts table, the samples table and the design table, these are accessible using `$` like we did above.
 
 ## Filtering Data
 
-Genes with very low counts across all libraries provide little evidence for differential expression. In addition, the pronounced discreteness of these counts interferes with some of the statistical approximations that are used later in the pipeline. These genes should be filtered out prior to further analysis. Users can have their own definition of expression but in general counts are dropped if they are not expressed in a minimum number of samples based on the minimum group size or if it does not achieve a minimum number of counts across all samples.
+Genes with very low counts across all libraries provide little evidence for differential expression.
+In addition, the pronounced discreteness of these counts interferes with some of the statistical approximations that are used later in the pipeline.
+These genes should be filtered out prior to further analysis.
+Users can have their own definition of expression but in general counts are dropped if they are not expressed in a minimum number of samples based on the minimum group size or if it does not achieve a minimum number of counts across all samples.
 
 edgeR provides the `filterByExpr()` function that retains genes with sufficiently large counts for statistical analysis.
-
 
 ```{r}
 # Perform filtering, subset the dds object and check the dimensions
@@ -581,8 +589,6 @@ dim(dds)
 ```
 
 
-
-
 ## Normalization and Transformation
 
 As we have discussed above, normalization is an integral step to the downstream analysis and necessary for differential comparison.
@@ -590,8 +596,26 @@ As we have discussed above, normalization is an integral step to the downstream 
 In this section we will compute normalization factors using the `calcNormFactors` function of the package.
 As we have previously introduced, edgeR uses the **trimmed mean of M-values (TMM) method** to calculate a set of **size factors** to **minimize the log-fold change differences occurring between samples** (*uninteresting*) for the majority of genes.
 
+```{r, include=FALSE}
+# For each sample, it trims genes with high log2 fold changes from a reference samples, as well as those with extreme expression values (high or low). 
+# Then it calculates a weighted mean of the remaining log fold changes.
+# The weight comes from the count variance
 
-The **counts for each sample get then multiplied by the scaling factors** to generate what is referred to as *effective library size  (lib.size × norm.factor)*, which will be used for downstream analyses.
+# “Ignoring genes that are extreme, how much higher or lower is this sample relative to a typical reference?”
+# “If I ignore genes that are clearly weird (too DE or too extreme), what is the typical log fold change between these samples?”
+# TMM trims genes based on their individual M- and A-values, then computes a weighted mean of the remaining M-values.
+
+# That weighted trimmed mean of Mi becomes the log-scale scaling factor.
+# The scaling factor is then converted to a multiplicative factor for the library.
+# Normalization factor=2^TMM
+# If your factor > 1 → your sample counts are scaled down
+# If factor < 1 → counts are scaled up
+
+#For each sample, TMM compares it to a reference sample (often a pseudo-reference, like the library with median composition).
+```
+
+
+The **counts for each sample get then multiplied by the scaling factors** to generate what is referred to as *effective library size (lib.size × norm.factor)*, which will be used for downstream analyses.
 
 ### Normalization factors
 
@@ -603,13 +627,23 @@ dds <- calcNormFactors(dds)
 
 We can check the values of the computed size factors by doing the following, note how there are as many size factors as there are samples and they are inserted in a column of the samples table named norm.factors in our DGEList object:
 
-
-
-> 💡 NOTE: Although `edgeR` does not use normalized counts as input for the differential analysis (the normalization process happens inside automatically). Normalized counts based on the scaling factors we just generated are useful when plotting results and performing clustering.
-
+> 💡 NOTE: Although `edgeR` does not use normalized counts as input for the differential analysis (the normalization process happens inside automatically).
+> Normalized counts based on the scaling factors we just generated are useful when plotting results and performing clustering.
 
 After we computed the scaling factors, we can perform a **transformation**.
-There are many ways to transform count data but all of them achieve the **goal of removing the dependence of the *variance* on the *mean* counts across samples** (something called *homoscedasticity*) in order to highlight interesting and biologically relevant expression trends even for genes expressed at lower values. In addition, many downstream analyses (like PCA, clustering, distance calculation) assume homoscedasticity — equal variance across features. If we do not stabilize for the mean-variance relationship, these analyses will be dominated by highly expressed genes — even if those genes might not be biologically interesting. Low and moderately expressed genes (which might carry the biological signal) are ignored, because they contribute much less to the variance or distances.
+There are many ways to transform count data but all of them achieve the **goal of removing the dependence of the *variance* on the *mean* counts across samples** (something called *homoscedasticity*) in order to highlight interesting and biologically relevant expression trends even for genes expressed at lower values.
+In addition, many downstream analyses (like PCA, clustering, distance calculation) assume homoscedasticity — equal variance across features.
+If we do not stabilize for the mean-variance relationship, these analyses will be dominated by highly expressed genes — even if those genes might not be biologically interesting.
+Low and moderately expressed genes (which might carry the biological signal) are ignored, because they contribute much less to the variance or distances.
+
+
+
+```{r, eval=FALSE, include=FALSE}
+# Can you check that the original sequencing depth does correspond to the library size
+dds$samples %>% ggplot(aes(x=orig.depth, y=lib.size)) + geom_boxplot()
+
+```
+
 
 
 ### Log2 transformed counts
@@ -624,15 +658,13 @@ This is equivalent to:
 
 ![](../pics/CPM.png){width="400"}
 
-
 Where:
 
-  counts*ij* = raw read count for gene *i* in sample *j*
- 
-  library size*j* = total reads in sample *j* 
- 
-  norm factor*j* = edgeR normalization factor (e.g. TMM)
+counts*ij* = raw read count for gene *i* in sample *j*
 
+library size*j* = total reads in sample *j*
+
+norm factor*j* = edgeR normalization factor (e.g. TMM)
 
 Without getting too much into the details of the workings of the function, we will transform the data and then look at how the gene-wise relationship between the mean and variance in our normalized data changes *before and after the transformation*.
 The purpose of this procedure is to allow proper data visualization later in the analysis, **the transformed data is NOT used for the differential expression analysis which instead starts from *raw counts***!
@@ -649,7 +681,6 @@ The following code is used to plot the mean/standard deviation relationship of e
 
 ```
 
-
 ```{r}
 library(vsn)
 
@@ -658,7 +689,8 @@ meanSdPlot(dds$counts)
 
 ```
 
-Compute normalized counts for visualization. The log2 values are returned when `log=TRUE`.
+Compute normalized counts for visualization.
+The log2 values are returned when `log=TRUE`.
 
 ```{r}
 # Transform the data with a log2 transform (watch how we create a new variable for it)
@@ -666,13 +698,11 @@ log2dds <- cpm(dds, log=TRUE)
 
 ```
 
-
 ```{r, eval=FALSE, include=FALSE}
 (3) / (17260692*0.9036/1000000)
 log2( ((3+2) / (17260692*0.9036/1000000)) )
 
 ```
-
 
 ```{r, eval=FALSE, include=FALSE}
 norm_counts_cpm <- t(
@@ -683,7 +713,6 @@ norm_counts_cpm <- t(
 all.equal(norm_counts_cpm, cpm(dds, log = FALSE))
 ```
 
-
 ```{r, eval=FALSE,include=FALSE}
 cbind(apply(log2dds, 2, sum),
       apply(dds$counts, 2, sum), 
@@ -692,43 +721,148 @@ cbind(apply(log2dds, 2, sum),
       ) %>% head()
 ```
 
-
 ```{r}
 # let's plot the transformed values
 meanSdPlot(log2dds)
-#meanSdPlot(log2(dds$counts + 1))
 
 ```
 
-> It is clear how genes with high mean expression (on the right) are now comparable in terms of standard deviation to genes with lower mean expression (on the left). 
+> It is clear how genes with high mean expression (on the right) are now comparable in terms of standard deviation to genes with lower mean expression (on the left).
 
-> After the transformation, the genes with the same mean do not have exactly the same standard deviations. The red line shows the experiment-wide trend of SD vs mean
-The genes with variance above the trend will allow us to cluster samples into interesting groups.
+> After the transformation, the genes with the same mean do not have exactly the same standard deviations.
+> The red line shows the experiment-wide trend of SD vs mean The genes with variance above the trend will allow us to cluster samples into interesting groups.
 
+### Visualize count distribution
 
-```{r, include=FALSE}
-dds$counts[1:10,] %>% 
+Let's create some plots to visualize the difference between raw counts and normalized counts.
+
+> 🤔 What kind of plot would be useful to check the distribution of counts? 
+> How do we need to reformat the count table to be able to plot all gene counts for each sample?
+
+```{r, eval=TRUE}
+
+dds$counts %>% 
   as.data.frame() %>% 
-  mutate(Region=rownames(.)) %>% 
-  gather(., sample, value, -Region) %>% 
-  #head()
-  ggplot(., aes(value, fill=Region)) + geom_density()
+  mutate(GeneID=rownames(.)) %>% 
+  
+  # Melt dataframe  
+  melt(., id.vars="GeneID", variable.name="sample", value.name = "counts") %>% 
+  
+  # Merge with sampleinfo to retrieve metadata for our samples  
+  merge(., sampleinfo, by="sample") %>%
+  
+  # Create boxplots  
+  ggplot(aes(x=sample, y=counts, colour=orig.depth)) + 
+  geom_boxplot(outlier.size = 0.05) + 
+  #ylim(0,10000) +
+  coord_cartesian(ylim = c(0, 10000)) + 
+  theme_classic() +
+  theme(axis.title=element_text(size=14), 
+        axis.text = element_text(size=10), 
+        axis.text.x = element_text(angle = 90, vjust=0.5, hjust = 1))
+
 ```
 
+> What can you say about the raw count distribution of the samples?
+
+```{r, eval=FALSE, include=FALSE}
+
+#Samples sequenced deeper have more sequencing reads, their count distribution spans higher values.
+#The distribution of counts is unequal between samples.
+
+# Majority of genes are not DE and have low to moderate counts.
+# After normalization the MAJORITY of the GENES will ALIGN naturally once adjusted for differences in seq depth.
+# So MEDIAN and IQR (middle 50% of expression) end up close, CONVERGE. The median is not affected by a few genes with high values.
+# Log2 scale exaggerates the effect.
+# Some normalization methods explicitly align distributions: Quantile normalization BUT NOT CPM, TMM, DESEq2
+
+```
+
+<details>
+  <summary>**How would you create a function to plot boxplots of counts without repeating the code every time?**</summary>
 
 
-```{r, include=FALSE}
+```{r}
 
-log2dds[1:10,] %>% 
+# Function to create boxplots of count distributions
+
+get_count_distribution <- function(data){
+
+data %>% 
   as.data.frame() %>% 
-  mutate(Region=rownames(.)) %>% 
-  gather(., sample, value, -Region) %>% 
-  #head()
-  ggplot(., aes(value, fill=Region)) + geom_density()
+  mutate(GeneID=rownames(.)) %>% 
+  
+  # Melt dataframe  
+  melt(., id.vars="GeneID", variable.name="sample", value.name = "counts") %>% 
+  
+  # Merge with sampleinfo to retrieve metadata about our samples  
+  merge(., sampleinfo, by="sample") %>%
+  
+  # Create boxplots  
+  ggplot(aes(x=sample, y=counts, colour=orig.depth)) + 
+  geom_boxplot(outlier.size = 0.05) + 
+  #ylim(0,10000) +
+  coord_cartesian(ylim = c(0, 10000)) + 
+  theme_classic() +
+  theme(axis.title=element_text(size=14), 
+        axis.text = element_text(size=10), 
+        axis.text.x = element_text(angle = 90, vjust=0.5, hjust = 1))
+}
+
+```
+
+</details>
+\  
+
+```{r}
+#| code-fold: true
+#| code-summary: "How do you implement the function?"
+
+# raw.counts=dds$counts
+# get_count_distribution(raw.counts)
+
+```
+
+
+```{r}
+#| code-fold: true
+#| code-summary: "Can you use the function to create similar plots for normalized counts?"
+
+# Which function gives normalized counts without log2 transformation?
+
+```
+
+
+```{r, eval=FALSE, include=FALSE}
+#norm.counts <- cpm(dds, log = FALSE)
+#get_count_distribution(norm.counts)
+
 ```
 
 
 
+
+```{r, eval=FALSE, include=FALSE}
+
+log2dds[1:100,] %>% 
+  as.data.frame() %>% 
+  mutate(GeneID=rownames(.)) %>% 
+  
+  # With pivot_longer, filter first the unwanted columns
+  pivot_longer( !GeneID, names_to = "sample", values_to = "value") %>%
+  #pivot_longer( cols=SQ_1950:SQ_1951, names_to = "sample", values_to = "value") %>%
+  
+  # Gather information from all columns except for -GeneID. GeneID remains as separate variable
+  #gather(., key="sample", value="value", -GeneID) %>%  
+  
+  # Gather information from columns SQ_1950 and SQ_1951, retain -GeneID as separate variable
+  #gather(., key="sample", value="value", SQ_1950, SQ_1951, -GeneID) %>%  
+  #tail()
+  ggplot(., aes(value, fill=sample)) + geom_density()
+
+```
+
+***
 
 ## Diagnostic Plots of Sample-to-sample Relationships
 
@@ -766,9 +900,8 @@ pheatmap(log2dds[select,], cluster_rows=TRUE, show_rownames=FALSE,
 
 ```
 
-
-
 #### Perform hierarchical clustering using the top variable genes
+
 ```{r, fig.height=5, fig.width=7}
 
 library(matrixStats)
@@ -785,6 +918,10 @@ pheatmap(log2dds[select,], cluster_rows=TRUE, show_rownames=FALSE,
          cluster_cols=TRUE, annotation_col=df, scale='row')
 
 ```
+
+
+> 🤔 Apart from using different set of genes, can you spot what is different about the two plots?
+
 
 ### Sample-to-sample Distances
 
@@ -818,7 +955,6 @@ pheatmap(sampleDistMatrix,
 
 ```
 
-
 ```{r}
 head(log2dds,2) %>% kbl() %>% kable_styling()
 ```
@@ -831,7 +967,6 @@ display.brewer.all()
 #display.brewer.pal(n = 8, name = 'RdBu')
 brewer.pal(n = 8, name = 'RdBu')
 ```
-
 
 ## Dimensionality reduction with Principal Component Analysis (PCA)
 
@@ -847,7 +982,6 @@ rv <- matrixStats::rowVars(log2dds)
 select <- order(rv, decreasing=TRUE)[seq_len(min(ntop, length(rv)))]
 ```
 
-
 ```{r}
 
 # Calculate principal components and percentage of variance
@@ -859,7 +993,6 @@ pcaData <- as.data.frame(pcs$x) %>% merge(sampleinfo, by=0)
 ```{r, eval=FALSE, include=FALSE}
 #percentVar <- round(100 * (pcs$sdev^2 / sum(pcs$sdev^2)))
 ```
-
 
 ```{r}
 # Look at the summary of the pcs object
@@ -885,8 +1018,6 @@ ggplot(pcaData, aes(PC1, PC2, color=group)) +
 > Can you plot the second and third components?
 > Can you project a different variable, e.g. project the patient ID for each sample?
 
-
-
 ```{r, include=FALSE}
 # Plot (this time with ggplot2!!)
 ggplot(pcaData, aes(PC2, PC3, color=group)) +
@@ -897,7 +1028,6 @@ ggplot(pcaData, aes(PC2, PC3, color=group)) +
   theme(aspect.ratio=1)
 ```
 
-
 ```{r}
 # Plot (this time with ggplot2!!)
 ggplot(pcaData, aes(PC1, PC2, color=patient)) +
@@ -907,8 +1037,6 @@ ggplot(pcaData, aes(PC1, PC2, color=patient)) +
   theme_linedraw()+
   theme(aspect.ratio=1)
 ```
-
-
 
 ```{r, fig.height=5}
 
@@ -925,6 +1053,8 @@ ggplot(pcaData, aes(PC1, PC2, color=patient, shape=group)) +
 Now that we have plotted all the main diagnostic information related to the dataset, we can start thinking about testing for differentially expressed genes.
 
 
+***
+
 ## Differential analysis
 
 ### Contrasts
@@ -933,12 +1063,10 @@ For this tutorial, we will **contrast tumor to normal tissues** and check which 
 
 We have already given instructions to `edgeR` on which comparison to perform through the design formula when we created the DGEList object called `dds`.
 
-
 Our `design` that we previously built is actually an object of "**matrix**" data type, which is similar to a `data.frame` object.
 
 > 💡 The main difference between matrices and data frames is that matrices store only a single class of data, while data frames can consist of many different classes of data.
 > 💡 You can also think about matrices as vectors that additionally contain the dimension attribute.
-
 
 We can inspect more closely the `design` matrix:
 
@@ -948,7 +1076,7 @@ design %>% kbl() %>% kable_styling()
 
 If we take a look at it we can see how the **eleventh column** of this matrix is the one related to our comparison of interest, in particular to the tumor condition that we want to compare against the *reference* group of the normal condition (in this case the `Intercept` column).
 
-> The design matrix typically consists of ***binary* values**, where '1' represents the samples of interest (tumor condition), and '0' represents the reference group (normal condition).
+> The design matrix typically consists of ***binary*** **values**, where '1' represents the samples of interest (tumor condition), and '0' represents the reference group (normal condition).
 > This binary setup allows us to construct a contrast between the two conditions.
 
 ### The Main `edgeR` Function
@@ -958,8 +1086,10 @@ Without going into the mathematical details, this function fits a [**generalized
 
 > GLMs are an extension of classical linear models to **non-normally distributed data**, and are used to specify probability distributions according to their mean-variance relationship.
 
-To make statistical inferences, we need to properly account for the biological variability that adds extra noise beyond pure sampling randomness or technical variability. This overdispersion (variance grows faster than the mean or more spread than expected by the mean) can be modeled by a Negative Binomial distribution. Thus, using negative binomial modeling we can compute the probability of seeing a certain count, depending on the expected mean and how much the counts vary between replicates.
- 
+To make statistical inferences, we need to properly account for the biological variability that adds extra noise beyond pure sampling randomness or technical variability.
+This overdispersion (variance grows faster than the mean or more spread than expected by the mean) can be modeled by a Negative Binomial distribution.
+Thus, using negative binomial modeling we can compute the probability of seeing a certain count, depending on the expected mean and how much the counts vary between replicates.
+
 We first need to compute **gene-wise dispersion estimates** with the function `estimateDisp()`.
 We can visually inspect the fit of the dispersion estimates below.
 
@@ -986,7 +1116,6 @@ We can visually inspect the fit of the dispersion estimates below.
 
 ```
 
-
 ```{r}
 # First we fit gene-wise dispersion estimates to accomodate the theoretical assumptions of the model
 dds <- estimateDisp(dds, design, robust=TRUE)
@@ -995,15 +1124,12 @@ dds <- estimateDisp(dds, design, robust=TRUE)
 plotBCV(dds)
 ```
 
-
 ```{r, eval=FALSE}
 ggplot(dds, aes(dds$AveLogCPM, dds$trended.dispersion)) + geom_point()
 ```
 
-
 From the dispersion estimate we can see that we are capturing and modelling efficiently the gene-wise dispersion in the dataset which is **intrinsically present due to variation**.
 This variation is quantified in `edgeR` with a **BCV** or a *B*iological *C*oefficient of *V*ariation which generally **takes into account both *unwanted* biological variability (that you can specify in the design) and technical variation**.
-
 
 ```{r, include=FALSE}
 
@@ -1028,21 +1154,17 @@ This variation is quantified in `edgeR` with a **BCV** or a *B*iological *C*oeff
 
 ```
 
-
 Now that we have estimated dispersion of the data, we can start from the **raw count data** to assess statistically significant differences.
 
 > Therefore, we will not use normalized and transformed data, but we know that `edgeR` will perform internally the normalization when performing the differential testing.
 
-Given raw counts, NB dispersion(s) and a design matrix, glmFit() fits the negative binomial
-GLM and produces an object of class DGEGLM with some new components. This
-DGEGLM object can then be passed to glmLRT() to carry out the likelihood ratio test.
-
+Given raw counts, NB dispersion(s) and a design matrix, glmFit() fits the negative binomial GLM and produces an object of class DGEGLM with some new components.
+This DGEGLM object can then be passed to glmLRT() to carry out the likelihood ratio test.
 
 ```{r}
 # Fit the GLM
 fit <- glmFit(dds, design)
 ```
-
 
 ```{r}
 # Perform differential testing given the design formula we wrote previously
@@ -1051,7 +1173,6 @@ fit <- glmFit(dds, design)
 dim(design)
 colnames(dds$design)
 ```
-
 
 ```{r}
 # Retrieve coefficient for the comparison of interest: CRC_K versus CRC_N
@@ -1062,31 +1183,29 @@ coef_name
 lrt <- glmLRT(fit, coef=coef)
 ```
 
-> The reason why we specified `coef=11` in the code above is explained by how edgeR interprets the design matrix that we built previously, which specifies the kinds of comparison to make. We are referring to the 11th column of the design matrix `groupidCRC_K`, the one we want to compare against the reference group `CRC_N`, which is represented in this case by the Intercept. The 12th column contrasts organoids to normal samples `groupidCRC_org`.
-
+> The reason why we specified `coef=11` in the code above is explained by how edgeR interprets the design matrix that we built previously, which specifies the kinds of comparison to make.
+> We are referring to the 11th column of the design matrix `groupidCRC_K`, the one we want to compare against the reference group `CRC_N`, which is represented in this case by the Intercept.
+> The 12th column contrasts organoids to normal samples `groupidCRC_org`.
 
 ## Extracting and examining results
 
 After having used the main edgeR function, we can actively explore the results of the analysis for the comparisons of our interest.
 
-
-First, we need to **perform multiple testing correction to obtain adjusted P-values**. The total number of DE transcripts up- and down-regulated at a FDR of 5% can be computed as follows, using the default Benjamini-Hochberg method:
+First, we need to **perform multiple testing correction to obtain adjusted P-values**.
+The total number of DE transcripts up- and down-regulated at a FDR of 5% can be computed as follows, using the default Benjamini-Hochberg method:
 
 ```{r}
 # Multiple testing correction using Benjamini-Hochberg method
 lrt$table$FDR <- p.adjust(lrt$table$PValue, method = "BH")
 ```
 
-
-We can additionally **print out a summary of the results of the differential analysis at a *P*-value < 0.01** by using the following code:
+We can additionally **print out a summary of the results of the differential analysis at a *P*-value \< 0.01** by using the following code:
 
 ```{r}
 summary(decideTests(lrt, p.value = 0.01))
 ```
 
-
 Here we can see (1) the type of comparison we are performing (vs the reference, in our case normal colon crypts), (2) the number of genes with significantly higher ("Up") expression in tumor tissues and the number of genes with significantly lower expression in tumor tissues (i.e., higher expression in normal condition).
-
 
 We can later filter the results based on the adjusted *P*-value used to **accept or reject the null hypothesis** ($H_{0}$) **of a gene NOT being differentially enriched between the two conditions**.
 
@@ -1115,15 +1234,12 @@ head(res[order(res$FDR),], 10) %>%
 res['PHLDA1',]
 ```
 
-
-
 This table shows the **log-fold change** levels of gene expression.
 Keep in mind that a **log-fold change of 1 corresponds to a difference in raw gene expression value of 2 times since the log has a base of 2**.
 So, to recap, all genes with log-fold change of 1 or more are twice as expressed in one condition compared to the other and we will later filter genes based on the fold-change value.
 
 Additionally, we can see the **Likelihood Ratio**, ("LR") for each gene.
 This is another statistical measure in `edgeR` used to assess significance: higher LR values indicate stronger evidence against the null hypothesis of no difference between conditions.
-
 
 Save the results of the differential analysis
 
@@ -1141,7 +1257,6 @@ if (file.exists(subDir)){
 }
 ```
 
-
 ```{r}
 # Create a new folder to save results
 
@@ -1156,7 +1271,6 @@ if (!file.exists(subDir)){
 getwd()
 ```
 
-
 ```{r}
 # Save results
 res %>% 
@@ -1164,7 +1278,6 @@ res %>%
 
 list.files('../results/')
 ```
-
 
 ## Visualizing results
 
@@ -1269,12 +1382,10 @@ volc_plot
 
 ```
 
-
-
 ### Visualizing results with heatmaps
 
 We can also plot differentially expressed genes in the two conditions of our interest using heatmaps.
-In this case, we select genes based on their significance (P-value < 0.01) and visualize how their expression values change across samples.
+In this case, we select genes based on their significance (P-value \< 0.01) and visualize how their expression values change across samples.
 
 ```{r}
 # Select differentially expressed genes
@@ -1305,11 +1416,15 @@ tumor_up_genes <- volcano_corr[volcano_corr$threshold == "A",] %>% pull(GeneID)
 up_mtx <- cpm(dds, log=TRUE, normalized.lib.sizes = TRUE)[tumor_up_genes,]
 
 # Merge information about samples with the counts in order to group counts based on the condition of interest
-merged_long_up_mtx <- pivot_longer(as.data.frame(up_mtx), cols = everything(), names_to = 'id') %>% merge(sampleinfo, by.x = 'id', by.y = 0)
+merged_long_up_mtx <- pivot_longer(as.data.frame(up_mtx), cols = everything(), names_to = 'id') %>% 
+  merge(sampleinfo, by.x = 'id', by.y = 0) %>%
+  mutate(group=factor(group, levels = c("CRC_N","CRC_K","CRC_org")))
 
 # Make the plot with ggplot2
-violins <- ggplot(merged_long_up_mtx, aes(group, value, fill = group)) + geom_violin(trim=FALSE) + 
+violins <- ggplot(merged_long_up_mtx, aes(group, value, fill = group)) + 
+  geom_violin(trim=FALSE, alpha=0.7) + 
   geom_boxplot(fill='white', width=0.1) + 
+  scale_fill_manual(values=c('darkgreen','purple','magenta')) +
   theme_classic() + 
   ylab('log CPM')
 
@@ -1318,8 +1433,8 @@ violins
 
 ### Plot the expression of single genes
 
-To make more informative comparisons we can plot the expression values of single genes across the groups/conditions of interest. IN the graph each dot is a sample, colored by the group it belongs to.
-
+To make more informative comparisons we can plot the expression values of single genes across the groups/conditions of interest.
+IN the graph each dot is a sample, colored by the group it belongs to.
 
 ```{r}
 # Select a set of genes to plot
@@ -1345,12 +1460,11 @@ pldf %>% merge(sampleinfo, by=0) %>%
             facet_wrap(~variable) + 
             theme_minimal()
 ```
+
 ```{r, include=FALSE}
 pldf_melt <- pldf %>% merge(sampleinfo[,c('group'), drop=FALSE], by=0) %>% 
             reshape2::melt()
 ```
-
-
 
 ## Save dds object
 
@@ -1361,23 +1475,10 @@ Let us save the object in case we need to retrieve it later on.
 getwd()
 ```
 
-
 ```{r}
 saveRDS(dds, '../results/dds_object.rds')
 ```
 
-
-
 ```{r}
 
 ```
-
-
-
-
-
-
-
-
-
-

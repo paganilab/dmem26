@@ -13,7 +13,6 @@ code-block-border-left: true
 date: 'Compiled: `r format(Sys.Date(), "%B %d, %Y")`'
 ---
 
-
 ```{r setup, include=FALSE}
 library(kableExtra)
 knitr::opts_chunk$set(
@@ -41,33 +40,17 @@ div.col pre.r { background-color:white; }
 -   Install, and use R packages and functions
 
 
-## *Omics* experiments
-
-'Omics' as disciplines **work to** **answer questions** regarding specific 'omes'.
-These questions are enabled by omics experiments; in most cases, these will be **sequencing- or mass-spectrometry based**.
-
-The identification of a suitable model, types and numbers of samples, the process of extraction and purification of our target 'ome', and finally its reformulation into a sequenceable product, i.e. **a *library***, **shape the final bioinformatic dataset** and **place limits on the possible questions** we will be able to ask of it.
-
-> For example, in the case of RNA-seq, phenol-based extraction and precipitation will yield results that are not always comparable with total RNA extraction with a spin column.
-> Even more, the contingent decision to perform ribodepletion or enrichment for polyadenylated transcript will have an impact even on simple gene expression analyses.
-
-Summing up, an Omics experiment is designed starting from a question, selecting the sample(s), wet lab procedure and library preparations that will enable the most truthful, informative dataset to be built.
-
-<center>
-
-![**Designing Omics experiments: from question to dataset**](../pics/the_omics_design.png)
-
-</center>
 
 ## Why learn R?
 
 R is a programming language built for statistical computing, data exploration, and graphical representation.
-Developed by Ross Ihaka and Robert Gentleman in the early 1990s, it has grown to be widely adopted in academia, research, and various data-focused industries.
+Developed by Ross Ihaka and Robert Gentleman in the early 1990s, it has grown to be widely adopted in academia, research, and various data-focused industries. 
+Coding is how humans can instruct computers to perform certain tasks, often highly complex.
 
 <center>
 
-![<https://aarababdellah.medium.com/what-is-r-programming-language-used-for-f600895e0416>](../pics/Why_learn_R.webp){width="400"}
-
+![](../pics/Why_learn_R.webp){width="400"}
+[Source](<https://aarababdellah.medium.com/what-is-r-programming-language-used-for-f600895e0416>)
 </center>
 
 Key features and advantages of R:
@@ -88,14 +71,16 @@ RStudio is an *integrated development environment* (IDE) and will be our primary
 
 You can follow two strategies:
 
-1.  Install `R` and RStudio on your machine
-2.  Run RStudio in a browser using RStudio Cloud.
+1.  Install `R` and RStudio on your machine 
+2.  Use the R Studio already installed on the mochines in the room.
+3.  **Run RStudio in a browser using RStudio Cloud.**
 
 Note that the first option will require a bit more time and effort.
 To get started with RStudio Cloud (now Posit Cloud), click on [this link](https://posit.cloud/plans/free) and create a Posit free account.
 Once you completed your registration, you are redirected to `Your Workspace`.
 To start a new R project, you can click on `New Project > New RStudio Project`.
 This will open RStudio on the Cloud.
+Select R 4.4 from the R version option above the Global Environment Panel (top right)
 
 ## The RStudio Interface
 
@@ -103,7 +88,7 @@ Now that you have RStudio open, you should see something similar to this:
 
 <center><img src="../pics/posit_interface.png" width="800"/></center>
 
-The RStudio interface is composed of *quadrants*:
+The RStudio working interface is composed of *quadrants*:
 
 1.  The `Console` window: located in the bottom-left, it's where you will find the output of your coding, and it's also possible to type `R` code *interactively* on the console.
 
@@ -124,7 +109,127 @@ The RStudio interface is composed of *quadrants*:
 
     -   The *History* pane keeps whatever computation you run in the console.
         You can re-run the computation stored in the history (double click or copy-paste) and you can also copy the past code into an existing or new *R Script*.
+        
+        
+## Communicating with R through the Console
 
+You should see your cursor on the left-hand side of the screen blinking. That window represents the R console. It can be used to “talk” with R through commands that it can understand!
+
+
+For example, try typing the following in the console and check what comes out (a.k.a. the output):
+
+```{r}
+# Tell R to print out some words on screen with the "print" command
+print("Hello World!")
+```
+
+
+
+## Create an R Markdown notebook
+
+During the tutorial you will copy paste chunks of codes from the published webpage into your R Console.
+
+You might want to save your code for a later use, especially when it starts to become long and complex.
+In this case, it is not very convenient to write it in the console, which does not keep track of it (as far as you don't go back in the *History*) and does not allow to edit the code and save changes.
+
+A solution is to create an R Markdown document or/and an Rscript (See section at the end for creating an Rscript).
+
+The benefit of creating an R Markdown is that you will be able to save your code and also visualize the output of you code all within the same document.
+
+-   Start a **New R Markdown** file from Files -\> New File -\> R Markdown in the menu bar.
+
+-   Create a **new folder** to save the R Markdown file inside your Project Directory by clicking on ![](../pics/goAAAAASUVORK5CYII=.png){width="30"}
+
+-   The go to File -\> Save As and save it inside the folder you just created
+
+> To write a code you need to **create a new chunk** by pressing `Alt` + `CMD` + `I` in macOS or `Alt` + `Ctrl` + `I` in Windows
+
+> ❗️ Writing some code in your *R Markdown* chunk will NOT automatically run it!
+> Instead, to **run your code** place the cursor inside the chunk and press `Alt` + `CMD` + `Enter`.
+> This will run all the lines of code inside the chunk.
+> Alternatively, you can place the cursor in a selected line and press `CMD` + `Enter` to run only that line.
+
+> Sometimes we may want to *'hide'* a certain line of code in the chunk but not delete it entirely.
+> This is called **Comment or Uncomment a code** and is enabled by pressing `SHIFT` + `CMD` + `C`.
+> This effectively places the hash symbol `#` in front of the line of code.
+> 💡 Notice that also the descriptive text inside the chunks are commented with `#`.
+
+
+## Install the packages
+
+The analyses we are going to perform require specific *functions* that are not included in the basic set of functions in R. These functions are collected in specific *packages*. R packages are extensions to the R programming language that contain code, data and documentation which help us performing standardized workflows.
+In the chunk below, we instruct R to install the packages that we will need later on through the workshop.
+
+```{r, eval=FALSE}
+
+install.packages("rmarkdown")
+install.packages("knitr")
+install.packages("BiocManager")
+
+```
+
+During installation of packages, you will see many messages being displayed on your R console, you usually need to pay attention to them if they are **red and specify an error**!
+
+If you encounter any of the messages below during installation, follow this procedure here:
+
+```{r, eval=FALSE}
+# R asks for package updates, answer "a" and type enter
+# Question displayed:
+Update all/some/none? [a/s/n]:
+
+# Answer to type:  
+a
+
+# R asks for installation from binary source, answer "no" and type enter
+# Question displayed:
+Do you want to install from sources the packages which need compilation? (Yes/no/cancel)
+
+# Answer to type:
+no
+```
+
+```{r, eval=FALSE}
+
+#Install packages from CRAN
+install.packages("tidyr")
+install.packages("dplyr")
+install.packages("kableExtra")
+
+# For differential analysis
+BiocManager::install("vsn")
+BiocManager::install("edgeR")
+install.packages("statmod")
+install.packages("matrixStats")
+
+# For visualizations
+install.packages("hexbin")
+#install.packages("ggplot2")
+install.packages("pheatmap")
+install.packages("RColorBrewer")
+install.packages("ggrepel")
+
+# For downstream analysis
+BiocManager::install("fgsea")
+install.packages("msigdbr")
+install.packages("gprofiler2")
+install.packages("reshape2")
+#BiocManager::install("clusterProfiler")
+
+# Clean garbage
+gc()
+
+```
+
+## Load libraries
+
+```{r}
+library(knitr)
+library(kableExtra)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(tibble)
+```
 
 ## R fundamentals
 
@@ -152,25 +257,25 @@ Logical queries always return either the value `TRUE` or `FALSE`.
 #1 Is it TRUE or FALSE?
 3 == 3
 
-#2 Is 45 bigger than 55?
+#2 Is 50 bigger than 56?
 50 > 56
 
 #3 Are these two words NOT the same?
 "Gene" != "gene"
 ```
 
-> Notice that in logical queries, `equal to` is represented by `==` and not by `=` , which instead is used to assign a value to an object.
+> Notice that in logical queries, `equal to` is represented by `==` and not by `=` , which instead is used to assign a value to an variable or object.
 > However, in practice, most *R* programmers tend to avoid `=` since it can easily lead to confusion with `==`.
 
 Below is a list of logical operators commonly used in R
 
 <center><img src="../pics/Logical_operators.png" width="500"/></center>
 
+### R Objects
 
-### Assigning values to objects
+Assigning values to objects with `<-` (a back arrow and a hyphen with no spaces) is a common task.
 
-Assigning values to objects with `<-` is a common task.
-What can be an *object* ?
+> 🤔 But what is an *object* ?
 
 -   a list of names
 -   a series of number
@@ -200,6 +305,7 @@ genes
 
 To create **objects with multiple values**, we can use the function `c()` which stands for 'concatenate':
 
+Let's create a *vector* object, to store some gene names.
 ```{r}
 # Adding some more genes to the object
 genes <- c("TP53",
@@ -247,7 +353,6 @@ Rules and guidelines in naming variables
 ```{r, error=TRUE}
 _x <- 2
 ```
-
 
 ## Object types (Data Structures)
 
@@ -333,10 +438,10 @@ We can combine various types of results into a single list to return them togeth
 Elements of a list can be named (`names` attribute).
 
 ```{r}
-data <- list(genes = genes,
+data.list <- list(genes = genes,
              counts = c(1, 2, 3, 4),
              metadata = c("TGFB1", 5, "AKT1", 6))
-data
+data.list
 ```
 
 > You will notice in this example that we do not use `""` for each value in the list.
@@ -351,15 +456,14 @@ Elements are indexed by double brackets but they can also be referenced by the \
 
 ```{r}
 # Retrieve 
-data$genes
-data[[2]]
-data[1]
+data.list$genes
+data.list[[2]]
+data.list[1]
 ```
 
 ```{r}
-lapply(data, length)
+lapply(data.list, length)
 ```
-
 
 ### Data frames
 
@@ -369,40 +473,20 @@ As we will see later, pretty much all the data we are going to handle will be in
 
 ```{r}
 # Let's create and display a data frame (a table) with four rows and two columns
-df <- data.frame("Class"=c("a","b","c","d"), # First column
+dataf <- data.frame("Class"=c("a","b","c","d"), # First column
             "Quantity"=c(1,10,4,6)) # Second column
-df
+dataf
 ```
 
 We have instructed R to create a data.frame object.
 We will give more of these commands from now on!
 
-### Object Attributes
-
-Objects have attributes that we can retrieve with psecialized functions:
-
--   class
--   length
--   dim
--   names
--   attributes
-
-How can we check what kind ("class") of object we have?
-
-```{r}
-class(genes)
-class(data)
-```
-
-```{r}
-names(data)
-```
 
 ### Functions
 
-We mention the term '*function*' multiple times, but what are functions and why we need them?
+We mention the term '*function*' multiple times, but what are functions and why do we need them?
 In simple terms, **functions are objects** that contain lines of codes and can be seen as shortcuts for our programming.
-Functions are useful for repeating several operations across multiple datasets with a single command.
+Functions are useful for repeating the same operation across multiple datasets with a single command.
 They save space and time, making our code more readable and reliable.
 We will make an example to understand better, by calculating the arithmetic mean:
 
@@ -505,6 +589,50 @@ list.files('../results/')
 
 ```
 
+Load (read) and Save (write) files
+
+
+```{r}
+# Save the dataframe we genertaed above
+write.table(dataf, "dataf.csv", sep = ",", quote = FALSE)
+```
+
+```{r}
+dataf <- read.table("dataf.csv", sep = ",")
+```
+
+
+### Object Attributes
+
+Objects have attributes that we can retrieve with specialized functions:
+
+-   class
+-   length
+-   dim
+-   names
+-   attributes
+
+How can we check what kind ("class") of object we have?
+
+```{r}
+class(genes)
+class(data.list)
+```
+
+Let's check the colnames in the list and dataframe we created:
+
+```{r, include=FALSE}
+all <- list(data.list, dataf )
+
+for (obj in all) {
+  
+    cat( "Names are :", names(obj), "\n" )
+  
+}
+```
+
+
+
 ## Tidyverse
 
 A collection of R packages designed for data science.
@@ -534,7 +662,7 @@ Tidy data describes a standard way of storing data that is used wherever possibl
 if (!require("tidyverse", quietly = TRUE))
   install.packages("tidyverse")
 
-library(tidyverse)
+#library(tidyverse)
 ```
 
 The default installation of R includes a variety of built-in datasets, typically used as sample data for experimenting with R functions.
@@ -561,7 +689,7 @@ What attributes mtcars has?
 attributes(mtcars)
 ```
 
-What do the hearders refer to?
+What do the headers refer to?
 
 The data was extracted from the 1974 Motor Trend US magazine, and comprises fuel consumption and 10 aspects of automobile design and performance for 32 automobiles (1973–74 models).
 
@@ -584,6 +712,14 @@ input %\>% selection %\>% filter %\>% mutate
 
 Filtering and subsetting
 
+```{r, eval=FALSE, include=FALSE}
+# any_of() expects character vectors of column names, not bare column names.
+mtcars %>% select(any_of(c("mpg", "cyl")))
+mtcars %>% select((c("mpg", "cyl")))
+mtcars %>% select(mpg, cyl)
+```
+
+
 ```{r}
 # Select specific columns
 mtcars %>% select(mpg, cyl) %>% head(2)
@@ -601,6 +737,12 @@ mtcars %>% slice(2:4)
 mtcars %>% filter(mpg>21 & hp>90)
 ```
 
+
+```{r}
+# Sort a variable based on decreasing values
+mtcars %>% arrange(desc(mpg)) %>% head(2)
+```
+
 Let’s create a new variable to identify cars with miles per gallon (mpg) \> 25
 
 ```{r}
@@ -608,10 +750,12 @@ Let’s create a new variable to identify cars with miles per gallon (mpg) \> 25
 mtcars %>% mutate(highmpg = ifelse(mpg>25, '1', '0')) %>% filter(highmpg==1)
 ```
 
+
 Combining operations: Identify cars with 5 gears and horse power \> 100.
 Display the miles per gallon in descending order.
 
-Note, we do not create a new object here, just inspecting the output of the combined functions we perform. 
+Note, we do not create a new object here, just inspecting the output of the combined functions we perform.
+
 ```{r}
 # Combining operations
 mtcars %>% 
@@ -622,7 +766,7 @@ mtcars %>%
 
 ```
 
-Transforming data: Long versus Wide Format
+### Transforming data: Long versus Wide Format
 
 *Wide Format*
 
@@ -630,7 +774,6 @@ Transforming data: Long versus Wide Format
 -   Not extensible to more metadata
 
 <center>![](../pics/WideFormat.png){width="500"}</center>
-
 
 *Long Format*
 
@@ -641,22 +784,34 @@ Transforming data: Long versus Wide Format
 
 <center>![](../pics/LongFormat.png){width="400"}</center>
 
-We use `pivot_longer()`, which "lengthens" data, increasing the number of rows and decreasing the number of columns. The inverse transformation is `pivot_wider()`.
 
-We will convert a subset (`slice` and `select`) of the mtcars object from wide to long format. We specify which columns we want to pivot into longer format in the `cols` argument. This information will be stored in the metadata column `names_to`. The actual values will be stored in the `values_to` column. `cols` defines a selection of columns. If empty, all variables are selected. You can supply bare variable names, select all variables between x and z with x:z, exclude y with -y.
+We use `pivot_longer()`, which "lengthens" data, increasing the number of rows and decreasing the number of columns.
+The inverse transformation is `pivot_wider()`.
+
+We will convert a subset (`slice` and `select`) of the mtcars object from wide to long format.
+We specify which columns we want to pivot into longer format in the `cols` argument.
+This information will be stored in the metadata column `names_to`.
+The actual values will be stored in the `values_to` column.
+`cols` defines a selection of columns.
+If empty, all variables are selected.
+You can supply bare variable names, select all variables between x and z with x:z, exclude y with -y.
 
 We keep the rownames as a separate column.
 
 ```{r}
 # Convert from wide to long format
-mtcars %>% slice(1:4) %>% select(1:4) %>% 
+mtcars %>% 
+  slice(1:4) %>% 
+  select(1:4) %>% 
   mutate(cars=rownames(.)) %>% 
   #pivot_longer(!cars, names_to = "keys", values_to = "value")
-  pivot_longer(cols=mpg:hp, names_to = "keys", values_to = "value")
+  pivot_longer(cols=mpg:hp, names_to = "keys", values_to = "value") %>%
+  kbl() %>% kable_styling()
   
 ```
 
-We first covert from wide to long format (in this cases using gather which is no longer under active development). Then we convert back to wide format.
+We first covert from wide to long format (in this cases using `gather` which is no longer under active development).
+Then we convert back to wide format.
 
 ```{r}
 # Convert from long back to wide format
@@ -666,15 +821,14 @@ mtcars %>% slice(1:4) %>% select(1:4) %>%
   gather(keys, value, -cars) %>%
   pivot_wider(names_from = "keys", 
               names_prefix = "var_",
-              values_from = "value")
+              values_from = "value") %>%
+  kbl() %>% kable_styling()
 ```
 
-> Similar transformations can be achieved with the reshape::melt and reshape::dcast functions
+> Similar transformations can be achieved with the `reshape::melt` and `reshape::dcast` functions
 
 
 
-
-# Other functions
 
 ```{r, eval=FALSE, include=FALSE}
 # 
@@ -717,8 +871,6 @@ mtcars %>% slice(1:4) %>% select(1:4) %>%
 
 ```
 
-
-
 ### ggplot2
 
 ggplot is a powerful and flexible library for tidyverse.
@@ -737,11 +889,12 @@ Geometries are **types of plot**:
 
 Aesthetics provide options to change the appearance of data in a plot - Using fixed values or - Linking to a column in the dataset - called an *aesthetic mapping*
 
-In ggplot2, the x and y mappings for data points are specified within the `aes()` function, either in the `ggplot()` function or in individual geom layers. The geom determines how the data points are represented graphically (e.g., as points, lines, etc.), but the x and y values themselves are mapped to the data.
+In ggplot2, the x and y mappings for data points are specified within the `aes()` function, either in the `ggplot()` function or in individual geom layers.
+The geom determines how the data points are represented graphically (e.g., as points, lines, etc.), but the x and y values themselves are mapped to the data.
 
 <center>
 
-![](../pics/ggplot.png){width="500"}
+![](../pics/ggplot.png){width="600"}
 
 ![](../pics/Geompoint.png){width="500"}
 
@@ -749,10 +902,11 @@ In ggplot2, the x and y mappings for data points are specified within the `aes()
 
 </center>
 
-
 Here, we create a scatter plot for two variables in the mtcar dataset and we will annotate the data based on a third variable.
+
 ```{r, fig.width=4}
-mtcars %>% ggplot(aes(mpg, wt, colour=cyl)) + geom_point()
+mtcars %>% 
+  ggplot(aes(mpg, wt, colour=cyl)) + geom_point()
 ```
 
 > Notice that the *cyl* is depicted as continuous variable.
@@ -763,7 +917,10 @@ mtcars %>% ggplot(aes(mpg, wt, colour=cyl)) + geom_point()
 class(mtcars$cyl)
 unique(mtcars$cyl)
 
-mtcars %>% mutate(cyl = factor(cyl, levels=unique(cyl)) ) %>% pull(cyl) %>% class()
+mtcars %>% 
+  mutate(cyl = factor(cyl, levels=unique(cyl)) ) %>% 
+  pull(cyl) %>% 
+  class()
 
 #mtcars %>% mutate(across(cyl, as.factor)) %>% pull(cyl) %>% class()
 
@@ -786,14 +943,17 @@ mtcars %>%
       geom_text(vjust=1.6, hjust=0.4, size=2)
 ```
 
-More exercises: 
+More exercises:
 
-- Make all data points size 4 and blue, with red stroke of size 2 and size 4.
-- Size according to the number of gears
+-   Make all data points size 4 and blue, with red stroke of size 2 and size 4.
+-   Size according to the number of gears
 
 ```{r, fig.width=6}
-mtcars %>% ggplot(aes(mpg, wt )) + geom_point(size=4, colour='red', fill='blue', shape=21, stroke=2)
-mtcars %>% mutate(across(gear, as.factor)) %>% ggplot(aes(mpg, wt, size=gear)) + geom_point(colour='red')
+mtcars %>% ggplot(aes(mpg, wt )) + 
+  geom_point(size=4, colour='red', fill='blue', shape=21, stroke=2)
+
+mtcars %>% mutate(across(gear, as.factor)) %>% 
+  ggplot(aes(mpg, wt, size=gear)) + geom_point(colour='red')
 ```
 
 > Geometries warn when missing values have been dropped from the data set and not plotted.
@@ -825,12 +985,12 @@ mtcars %>% mutate(across(cyl, as.factor)) %>%
 > 💡 Perform Exploratory Data Analysis using the package `explore`.
 > <https://cran.r-project.org/web/packages/explore/vignettes/explore-mtcars.html>
 
+> 💡 Create beautiful and informative plots with ggplot.
+> <https://r-graph-gallery.com/> <https://www.cedricscherer.com/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r/>
+
 ## Create an Rscript
 
-You might want to save your code for a later use, especially when it starts to become long and complex.
-In this case, it is not very convenient to write it in the console, which does not keep track of it (as far as you don't go back in the *History*) and does not allow to edit the code and save changes.
-
-So, instead, we can write code into an **R Script**, which is a document that RStudio recognizes as *R programming code* and has `.R` as extension.
+We can also write code into an **R Script**, which is a document that RStudio recognizes as *R programming code* and has `.R` as extension.
 Files that are not R Scripts, like `.txt`, `.rtf` or `.md`, can also be opened in RStudio, but any code written in it will not be **automatically recognized**.
 
 When opening an R script or creating a new one, it will display in the *Source* window.
@@ -847,8 +1007,6 @@ The term 'source' can be understood as any type of file, e.g. data, programming
 
 ## References
 
-- <https://r.qcbs.ca/workshop01/book-en/index.html> 
-- <https://rstudio-education.github.io/hopr/>
-- <https://www.bioinformatics.babraham.ac.uk/training.html>
-
-
+-   <https://r.qcbs.ca/workshop01/book-en/index.html>
+-   <https://rstudio-education.github.io/hopr/>
+-   <https://www.bioinformatics.babraham.ac.uk/training.html>

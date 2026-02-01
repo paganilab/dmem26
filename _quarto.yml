@@ -13,8 +13,8 @@ website:
         text: Home
       - href: ./pages/Intro_to_R.Rmd
         text: Intro_to_R
-#      - href: ./RNA-seq_analysis/pages/RNA-seq_principles.Rmd
-#        text: RNA-seq principles
+      - href: ./pages/RNA-seq_principles.Rmd
+        text: RNA-seq principles
       - href: ./pages/Part1.Rmd
         text: Part 1
       - href: ./pages/Part2.Rmd

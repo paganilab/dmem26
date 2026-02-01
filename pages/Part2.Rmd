@@ -83,32 +83,13 @@ The following image adapted from the [original publication](https://www.pnas.org
 
 To answer if members of a gene set occur towards the top or bottom of the ranked list of genes, we need:
 
-1. gene sets defined based on prior biological knowledge
-2. ranked list of differentially expressed genes (e.g. based on logFold Change or P-value)
+1. ranked list of differentially expressed genes (e.g. based on logFold Change or P-value)
+2. gene sets defined based on prior biological knowledge
 
 
+### Ranked list of genes
 
 We will perform **Pre-ranked GSEA** using all genes tested for differential analysis, ranked by their -log10(p-adjusted value) * the sign of the log2FoldChange, e.g. significantly upregulated genes are at the top of the rank whilst significantly downregulated ones are at the bottom. In our case, we want to check if a gene set of colorectal cancer in significantly enriched in the genes that are upregulated in our primary CRC samples. To run GSEA, we will use the `fgsea` package. 
-
-
-We will first retrieve gene sets from the Molecular Signatures Database (MSigDB), a resource of tens of thousands of annotated gene sets for use with GSEA software, divided into Human and Mouse collections. 
-In order to extract the gene set without the need to directly download it, we are going to access MSigDB directly from R using another package called msigdbr.
-
-<center>
-
-<img src="../pics/MSigDB.png" width="800"/>(*The web interface for MSigDB*)
-
-</center>
-
-
-There are 35,134 gene sets (number constantly increases) in the Human MSigDB that are divided into 9 major collections.
-
-<center>
-
-<img src="../pics/MSigDB_Collections.png" width="800"/>(*Human MSigDB Collections*)
-
-</center>
-
 
 ```{r}
 # Rank the genes based on their padj x sign(log2FC)
@@ -153,7 +134,29 @@ tail(ranked)
 ```
 
 
-Install and import libraries for fgsea and msigdbr 
+
+### MSignDB signatures
+
+We will first retrieve gene sets from the Molecular Signatures Database (MSigDB), a resource of tens of thousands of annotated gene sets for use with GSEA software, divided into Human and Mouse collections. 
+In order to extract the gene set without the need to directly download it, we are going to access MSigDB directly from R using another package called msigdbr.
+
+<center>
+
+<img src="../pics/MSigDB.png" width="800"/>(*The web interface for MSigDB*)
+
+</center>
+
+
+There are 35,134 gene sets (number constantly increases) in the Human MSigDB that are divided into 9 major collections.
+
+<center>
+
+<img src="../pics/MSigDB_Collections.png" width="800"/>(*Human MSigDB Collections*)
+
+</center>
+
+
+Import libraries for fgsea and msigdbr 
 ```{r, eval=FALSE}
 if (!require(fgsea, quiet=TRUE))
   BiocManager::install("fgsea")
@@ -165,16 +168,31 @@ if (!require(msigdbr, quiet=TRUE))
 ```
 
 
-Extract the curated gene sets (C2) from the MSigDB database
+Extract the curated gene sets (C2) from the MSigDB database, subcollection Chemical and Genetic Perturbations.
 
-```{r}
+It is very likely that the following code will crash your R session due to the limited resources provided by the Posit Cloud platform. This is why the code below is commented and, instead, you will upload the curated dataset (we have already extracted) from the course material.
+
+```{r, eval=FALSE, include=TRUE}
+options(timeout = 600) # Increase network timeout
 library(msigdbr)
 # Extract specific gene sets from the MSigDB database, e.g. Chemical and Genetic Pertubations
-curated_gsets <- msigdbr(species = "human", collection = "C2", subcollection = 'CGP')
+#curated_gsets <- msigdbr(species = "human", collection = "C2", subcollection = 'CGP') 
+#saveRDS(curated_gsets, "../course_material/curated_gsets.rds")
 ```
 
-Inspect the information and gene sets we retrieved.
+```{r, eval=FALSE, include=FALSE}
+
+options(timeout = 600) # Increase network timeout
+library(msigdbr)
+# Extract specific gene sets from the MSigDB database, e.g. Chemical and Genetic Pertubations
+curated_gsets <- msigdbr(species = "human", collection = "C2", subcollection = 'CGP') |> dplyr::select(gs_name, gene_symbol, gs_description)
+
+```
+
+
+Load the `curated_gsets` dataset from the course material. Inspect the information and gene sets we retrieved. 
 ```{r}
+curated_gsets <- readRDS('../course_material/curated_gsets.rds')
 names(curated_gsets)
 ```
 
@@ -300,6 +318,9 @@ First, we will **create a custom function** that takes as input a list of genes 
 
 
 ```{r}
+#| code-fold: true
+#| code-summary: "Code for running gprofiler and generating rank dot plots"
+
 # Result data.frames will be stored in this object 
 gprof <- c()
 
@@ -511,17 +532,19 @@ lapply(gprof, dim)
 ```
 
 
-```{r}
+```{r, eval=FALSE, include=TRUE}
 # suppressPackageStartupMessages(
 #   BiocManager::install("clusterProfiler")
+#    BiocManager::install("org.Hs.eg.db")
 # )
 
 ```
 
 
-```{r, include=FALSE}
+```{r, eval=FALSE, include=TRUE}
 # #library(org.Hs.eg.db)
 # library(clusterProfiler)
+
 # ontology="MF"
 # 
 # # Perform gene ontology enrichment
@@ -535,12 +558,12 @@ lapply(gprof, dim)
 #                 readable      = TRUE)
 ```
 
-```{r}
+```{r, eval=FALSE, include=TRUE}
 #head(ego)
 ```
 
 
-```{r}
+```{r, eval=FALSE, include=TRUE}
 # Plot results of gene ontology enrichment
 #goplot(ego, firstSigNodes=10)
 ```
@@ -549,8 +572,8 @@ lapply(gprof, dim)
 Let’s now plot the results with a ranked dotplot. 
 Gene ontology terms are ranked from the top to the bottom based on the Gene Ratio (number of genes intersecting the term / total number of unique genes provided). The significance of the enrichment (p.adjust) is depicted by the color, whilst the size of the dot represents the number of genes in our geneset (e.g. up-regulated genes) that overlap the specific GO term. 
 
-```{r}
-#dotplot(ego, showCategory=20) + ggtitle(paste0("Dotplot for GO-", ontology, "enrichment")
+```{r, eval=FALSE, include=TRUE}
+dotplot(ego, showCategory=20) + ggtitle(paste0("Dotplot for GO-", ontology, "enrichment")
 ```
 
 
